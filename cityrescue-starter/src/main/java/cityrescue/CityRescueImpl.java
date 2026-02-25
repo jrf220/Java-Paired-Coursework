@@ -12,10 +12,10 @@ import cityrescue.exceptions.*;
 public class CityRescueImpl implements CityRescue {
 
     // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
-    Object cityMap;
-    Array units = [];
-    Array stations = [];
-    Array incidents = [];
+    private Object cityMap;
+    private Object[] units;
+    private Object[] station;
+    private Object[] incidents;
     int tick = 0;
     
 
