@@ -3,7 +3,6 @@ class FireEngine extends Unit {
     private String unitStatus = "IDLE";
     private final String canRespondTo = "FIRE";
     private final int ticksToResolve = 4;
-    private int unitID;
 
     FireEngine(){
         // this is a constructor method
@@ -34,4 +33,5 @@ class FireEngine extends Unit {
     public void moveUnit(){
         
     }
+
 }
