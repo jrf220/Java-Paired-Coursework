@@ -1,6 +1,6 @@
 public abstract class Unit {
    private String unitType;
-   private String unitStatus;
+   private String unitStatus = "IDLE";
    private String canRespondTo;
    private int ticksToResolve;
    private int unitID;
@@ -20,3 +20,4 @@ public abstract class Unit {
    abstract void moveUnit();
 
 }
+
