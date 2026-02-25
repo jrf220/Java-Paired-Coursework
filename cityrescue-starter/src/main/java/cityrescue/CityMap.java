@@ -3,7 +3,7 @@ public class CityMap
     
 
     private int[] gridSize;
-    private Object cityGrid;
+    private Object[][] cityGrid;
     private boolean[][] blocked;
 
     public void setGridSize(int[] gridSizeIn)
@@ -48,4 +48,5 @@ public class CityMap
     {
         return false
     }
+
 }
