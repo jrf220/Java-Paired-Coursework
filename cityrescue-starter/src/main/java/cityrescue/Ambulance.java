@@ -3,7 +3,6 @@ class Ambulance extends Unit {
     private String unitStatus = "IDLE";
     private final String canRespondTo = "MEDICAL";
     private final int ticksToResolve = 2;
-    private int unitID;
 
     Ambulance(){
         // this is a constructor method
@@ -33,4 +32,5 @@ class Ambulance extends Unit {
     public void moveUnit(){
         
     }
+
 }
