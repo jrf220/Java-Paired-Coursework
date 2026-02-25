@@ -3,7 +3,6 @@ class PoliceCar extends Unit {
     private String unitStatus = "IDLE";
     private final String canRespondTo = "CRIME";
     private final int ticksToResolve = 3;
-    private int unitID;
 
     PoliceCar(){
         // this is a constructor method
@@ -34,4 +33,5 @@ class PoliceCar extends Unit {
     public void moveUnit(){
         
     }
+
 }
