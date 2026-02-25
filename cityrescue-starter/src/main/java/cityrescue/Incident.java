@@ -10,24 +10,12 @@ public class Incident{
         incidentID = ++numberOfIncidents;
     }
 
-    public String getIncidentType(){
-        return this.incidentType;
-    }
-    public void setIncidentType(String incidentType){
-        this.incidentType = incidentType;
-    }
-    public int getIncidentID(){
-        return this.incidentID;
-    }
-    public static int getNumberOfIncidents(){
-        return numberOfIncidents;
-    }
-    public void setIncidentStatus(String incidentStatus){
-        this.incidentStatus = incidentStatus;
-    }
-    public String getIncidentStatus(){
-        return incidentStatus;
-    }
+    public String getIncidentType() {return this.incidentType;}
+    public int getIncidentID() {return this.incidentID;}
+    public static int getNumberOfIncidents() {return numberOfIncidents;}
+    public String getIncidentStatus() {return incidentStatus;}
+    public void setIncidentStatus(String incidentStatus) {this.incidentStatus = incidentStatus;}
+    
     public void cancelIncident(){
         if (incidentStatus == "REPORTED" || incidentStatus == "DISPATCHED"){
             this.setIncidentStatus("CANCELLED");
@@ -35,3 +23,4 @@ public class Incident{
     }
 
 }
+
