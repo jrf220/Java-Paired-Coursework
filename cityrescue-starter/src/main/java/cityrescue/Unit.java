@@ -5,6 +5,8 @@ public abstract class Unit {
    private int ticksToResolve;
    private int unitID;
    private int numberOfUnits;
+   private int[] currentPos;
+   private String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"}
 
    public Unit(){
       unitID = ++numberOfUnits;
@@ -17,7 +19,12 @@ public abstract class Unit {
    abstract String getCanRespondTo();
    abstract boolean canHandle(Incident type);
    abstract int getTicksToResolve();
-   abstract void moveUnit();
+   public Object moveUnit(Object CityMap){
+      // check manhattan distance to target
+      
+      return CityMap
+   }
 
 }
+
 
