@@ -1,6 +1,5 @@
 class Ambulance extends Unit {
     private final String unitType = "AMBULANCE";
-    private String unitStatus = "IDLE";
     private final String canRespondTo = "MEDICAL";
     private final int ticksToResolve = 2;
 
@@ -34,3 +33,4 @@ class Ambulance extends Unit {
     }
 
 }
+
