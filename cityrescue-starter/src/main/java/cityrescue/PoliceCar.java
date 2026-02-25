@@ -1,6 +1,5 @@
 class PoliceCar extends Unit {
     private final String unitType = "POLICE_CAR";
-    private String unitStatus = "IDLE";
     private final String canRespondTo = "CRIME";
     private final int ticksToResolve = 3;
 
@@ -35,3 +34,4 @@ class PoliceCar extends Unit {
     }
 
 }
+
