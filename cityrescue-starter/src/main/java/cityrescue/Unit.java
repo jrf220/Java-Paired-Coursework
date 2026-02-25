@@ -3,7 +3,7 @@ public abstract class Unit {
    private String unitStatus;
    private String canRespondTo;
    private int ticksToResolve;
-   private int unitID = 0;
+   private int unitID;
    private int numberOfUnits;
 
    public Unit(){
@@ -18,4 +18,5 @@ public abstract class Unit {
    abstract boolean canHandle(Incident type);
    abstract int getTicksToResolve();
    abstract void moveUnit();
+
 }
