@@ -4,23 +4,20 @@ import java.util.InputMismatchException;
 
 public class CityMap
 {
-    private int[] gridSize;
-    private Object[][] cityGrid;
+    final private int[] gridSize;
+    final private Object[][] cityGrid;
     private boolean[][] blocked;
 
-    public void setGridSize(int[] gridSizeIn)
+    public CityMap(int[] gridSizeIn, Object[][] cityGridIn, boolean[][] blockedIn)
     {
         gridSize = gridSizeIn;
+        cityGrid = cityGridIn;
+        blocked = blockedIn;
     }
 
     public int[] getGridSize()
     {
         return gridSize;
-    }
-
-    public void setCityGrid(Object[][] cityGridIn)
-    {
-        cityGrid = cityGridIn;
     }
 
     public Object[][] getCityGrid()
@@ -40,9 +37,16 @@ public class CityMap
         }
     }
 
-    public void setBlocked(boolean[][] blockedIn)
+    public void removeBlockedTile(int[] coords)
     {
-        blocked = blockedIn;
+        if (blocked[coords[0]][coords[1]] == true)
+        {
+            blocked[coords[0]][coords[1]] = false;
+        }
+        else
+        {
+            throw new InputMismatchException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
+        }
     }
 
     public boolean[][] getBlocked()
