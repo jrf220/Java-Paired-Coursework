@@ -1,7 +1,9 @@
+package cityrescue;
+
+import java.util.InputMismatchException;
+
 public class CityMap
 {
-    
-
     private int[] gridSize;
     private Object[][] cityGrid;
     private boolean[][] blocked;
@@ -18,35 +20,38 @@ public class CityMap
 
     public void setCityGrid(Object[][] cityGridIn)
     {
-        cityGrid = cityGridIn
+        cityGrid = cityGridIn;
     }
 
     public Object[][] getCityGrid()
     {
-        return cityGrid
+        return cityGrid;
     }
 
     public void addBlockedTile(int[] coords)
     {
         if (blocked[coords[0]][coords[1]] == false)
-            blocked[coords[0]][coords[1]] = true
+        {
+            blocked[coords[0]][coords[1]] = true;
+        }
         else
-            throw new InputMismatchException("Roadcblock already placed at " + coords[0] +", " + coords[1])
+        {
+            throw new InputMismatchException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+        }
     }
 
     public void setBlocked(boolean[][] blockedIn)
     {
-        blocked = blockedIn
+        blocked = blockedIn;
     }
 
     public boolean[][] getBlocked()
     {
-        return blocked
+        return blocked;
     }
 
     public boolean legalMove()
     {
-        return false
+        return false;
     }
-
 }
