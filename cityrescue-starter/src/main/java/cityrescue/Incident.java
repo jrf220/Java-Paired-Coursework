@@ -2,6 +2,8 @@ public class Incident{
     private String incidentType;
     private int incidentID;
     private static int numberOfIncidents = 0;
+    private int severity = 1;
+    private int incidentStatus;
 
     public void Incident(String incidentType){
         this.incidentType = incidentType;
@@ -20,4 +22,16 @@ public class Incident{
     public static int getNumberOfIncidents(){
         return numberOfIncidents;
     }
+    public void setIncidentStatus(String incidentStatus){
+        this.incidentStatus = incidentStatus;
+    }
+    public String getIncidentStatus(){
+        return incidentStatus;
+    }
+    public void cancelIncident(){
+        if (incidentStatus == "REPORTED" || incidentStatus == "DISPATCHED"){
+            this.setIncidentStatus("CANCELLED");
+                }
+    }
+
 }
