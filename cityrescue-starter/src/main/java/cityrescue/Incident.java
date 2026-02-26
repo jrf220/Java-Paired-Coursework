@@ -4,6 +4,7 @@ public class Incident{
     private static int numberOfIncidents = 0;
     private int severity = 1;
     private int incidentStatus;
+    private int[] position;
 
     public void Incident(String incidentType){
         this.incidentType = incidentType;
@@ -14,7 +15,9 @@ public class Incident{
     public int getIncidentID() {return this.incidentID;}
     public static int getNumberOfIncidents() {return numberOfIncidents;}
     public String getIncidentStatus() {return incidentStatus;}
+    public int[] getPosition() {return position;}
     public void setIncidentStatus(String incidentStatus) {this.incidentStatus = incidentStatus;}
+    public void setPosition(int[] position) {this.position = position;}
     
     public void cancelIncident(){
         if (incidentStatus == "REPORTED" || incidentStatus == "DISPATCHED"){
@@ -23,4 +26,5 @@ public class Incident{
     }
 
 }
+
 
