@@ -23,12 +23,14 @@ public abstract class Unit {
    
    public boolean canHandle(Incident type) {return (type.getIncidentType().equals(canRespondTo));}
    public Object moveUnit(Object CityMap){
+      int[] targetPos = this.targetIncident.getPosition()
       // check manhattan distance to target
          // pythogras with target incident
       return CityMap
    }
 
 }
+
 
 
 
