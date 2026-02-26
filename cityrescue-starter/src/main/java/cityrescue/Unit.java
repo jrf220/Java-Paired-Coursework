@@ -24,10 +24,29 @@ public abstract class Unit {
    
    public boolean canHandle(Incident type) {return (type.getIncidentType().equals(canRespondTo));}
    public Object moveUnit(Object CityMap){
-      int[] targetPos = this.targetIncident.getPosition()
-      // check manhattan distance to target
-         // pythogras with target incident
-            // check which neighbouring spaces are blocked
+      int[] targetPos = this.targetIncident.getPosition();
+      int distanceY = Math.abs(targetPos[0] - position[0]);
+      int distanceX = Math.abs(targetPos[1] - position[1]);
+
+      String[] blockedSpaces = CityMap.checkAround(this.position);
+      if (!(Arrays.asList(blockedSpaces).contains(false))) {return CityMap;}  // nowhere to move and so CityMap is returned.
+      // implement blocked spaces.
+
+      directions = new String[2]
+      if (targetPos[1] > position[1]) {directions[1] = "EAST";}
+      else if (targetPos[1] < position[1]) {directions[1] = "WEST";}
+      else {directions[1] = "NEITHER";}
+      if (targetPos[0] > position[0]) {directions[0] = "SOUTH";}
+      else if (targetPos[0] < position[0]) {directions[0] = "NORTH";}
+      else {directions[0] = "NEITHER";}
+
+      for (int i = 0; i < movementCandidates.length; i++){
+         if (Arrays.asList(directions).contains(movementCandidates[i])) {
+            String closest = movementCandidates[i]
+            break;
+            }
+      }
+
       switch (closest) {
          case "NORTH":
             // travel north
