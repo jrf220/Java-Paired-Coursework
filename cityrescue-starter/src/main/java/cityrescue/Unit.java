@@ -5,7 +5,7 @@ public abstract class Unit {
    private int ticksToResolve;
    private int unitID;
    private int numberOfUnits;
-   private int[] position;
+   private int[] position;  //[y, x]
    private String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"}
    private Object targetIncident;
 
@@ -24,6 +24,7 @@ public abstract class Unit {
    
    public boolean canHandle(Incident type) {return (type.getIncidentType().equals(canRespondTo));}
    public Object moveUnit(Object CityMap){
+      if (!(this.unitStatus.equals("EN_ROUTE"))) {return CityMap;}
       int[] targetPos = this.targetIncident.getPosition();
       int distanceY = Math.abs(targetPos[0] - position[0]);
       int distanceX = Math.abs(targetPos[1] - position[1]);
@@ -47,20 +48,26 @@ public abstract class Unit {
             }
       }
 
+      // remove item from current city map position
+
       switch (closest) {
          case "NORTH":
-            // travel north
+            this.position[0] -= 1
             break
          case "EAST":
-            // travel east
+            this.position[1] += 1
             break
          case "SOUTH":
-            // travel south
+            this.position[0] += 1
             break
          case "WEST":
-            // travel west
+            this.position[1] -= 1
             break
       }
+
+      // add item to new position in city map
+
+      if (Arrays.equals(position, targetPos)) {this.unitStatus = "AT_SCENE"}
       return CityMap
    }
 
