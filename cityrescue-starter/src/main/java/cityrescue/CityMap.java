@@ -3,7 +3,8 @@ package cityrescue;
 import java.util.InputMismatchException;
 
 public class CityMap
-{
+{   
+    //The grid uses a 0-based coordinate system. A location (x, y) is in bounds iff 0 ≤ x < width and 0 ≤ y < height.
     final private int[] gridSize;
     final private Object[][] cityGrid;
     private boolean[][] blocked;
@@ -27,36 +28,36 @@ public class CityMap
 
     public void addBlockedTile(int[] coords)
     {
-        if (blocked[coords[0]][coords[1]] == false)
+        if (blocked[coords[1]][coords[0]] == false)
         {
-            blocked[coords[0]][coords[1]] = true;
+            blocked[coords[1]][coords[0]] = true;
         }
         else
         {
-            throw new InputMismatchException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+            throw new InputMismatchException("Roadcblock already placed at " + coords[1] +", " + coords[0]);
         }
     }
 
     public void removeBlockedTile(int[] coords)
     {
-        if (blocked[coords[0]][coords[1]] == true)
+        if (blocked[coords[1]][coords[0]] == true)
         {
-            blocked[coords[0]][coords[1]] = false;
+            blocked[coords[1]][coords[0]] = false;
         }
         else
         {
-            throw new InputMismatchException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
+            throw new InputMismatchException("Roadcblock is not already placed at " + coords[1] +", " + coords[0]);
         }
     }
 
     public void addStation(int[] coords, Station stationToBeAdded)
     {
-        cityGrid[coords[0]][coords[1]] = stationToBeAdded;
+        cityGrid[coords[1]][coords[0]] = stationToBeAdded;
     }
 
     public void removeStation(int[] coords)
     {
-        cityGrid[coords[0]][coords[1]] = new Object();
+        cityGrid[coords[1]][coords[0]] = new Object();
     }
 
     public boolean[][] getBlocked()
@@ -66,7 +67,7 @@ public class CityMap
 
     public boolean isBlocked(int[] coords)
     {
-        return blocked[coords[0]][coords[1]];
+        return blocked[coords[1]][coords[0]];
     }
 
     public boolean legalMove()
@@ -78,28 +79,28 @@ public class CityMap
     {
         boolean[] unblockedDirectionList = new boolean[4]; // In the order: N, E, S, W
 
-        int tempx = coords[1] + 1;
-        if (tempx <= gridSize[1])
+        int tempx = coords[0] + 1;
+        if (tempx < gridSize[0])
         {
-            unblockedDirectionList[0] = isBlocked(new int[]{coords[0], tempx});
+            unblockedDirectionList[0] = isBlocked(new int[]{tempx, coords[1]});
         }
         else
         {
             unblockedDirectionList[0] = true;
         }
         
-        tempx = coords[1] - 1;
+        tempx = coords[0] - 1;
         if (tempx >= 0)
         {
-            unblockedDirectionList[1] = isBlocked(new int[]{coords[0], tempx});
+            unblockedDirectionList[1] = isBlocked(new int[]{tempx, coords[1]});
         }
         else
         {
             unblockedDirectionList[1] = true;
         }
 
-        int tempy = coords[0] + 1;
-        if (tempy <= gridSize[0])
+        int tempy = coords[1] + 1;
+        if (tempy < gridSize[1])
         {
             unblockedDirectionList[2] = isBlocked(new int[]{tempy, coords[1]});
         }
