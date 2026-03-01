@@ -13,9 +13,9 @@ public class CityRescueImpl implements CityRescue {
 
     // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
     private Object cityMap;
-    private Object[] units;
-    private Object[] station;
-    private Object[] incidents;
+    private Unit[] units;
+    private Station[] station;
+    private Incident[] incidents;
     int tick = 0;
     
 
