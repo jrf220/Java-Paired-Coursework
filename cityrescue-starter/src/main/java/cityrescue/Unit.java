@@ -5,7 +5,7 @@ public abstract class Unit {
    private int ticksToResolve;
    private int unitID;
    private int numberOfUnits;
-   private int[] position;  //[y, x]
+   private int[] position;  //[x, y]
    private String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"}
    private Object targetIncident;
 
@@ -26,20 +26,23 @@ public abstract class Unit {
    public Object moveUnit(Object CityMap){
       if (!(this.unitStatus.equals("EN_ROUTE"))) {return CityMap;}
       int[] targetPos = this.targetIncident.getPosition();
-      int distanceY = Math.abs(targetPos[0] - position[0]);
-      int distanceX = Math.abs(targetPos[1] - position[1]);
+      int distanceY = Math.abs(targetPos[1] - position[1]);
+      int distanceX = Math.abs(targetPos[0] - position[0]);
 
-      String[] blockedSpaces = CityMap.checkAround(this.position);
+      boolean[] blockedSpaces = CityMap.checkAround(this.position);
       if (!(Arrays.asList(blockedSpaces).contains(false))) {return CityMap;}  // nowhere to move and so CityMap is returned.
-      // implement blocked spaces.
+      validDir = new String[2]
+      for (int i = 0; i < movementCandidates.length; i++){
+         if (!(blockedSpaces[i])) {validDir[i] = movementCandidates[i];}
+      }
 
       directions = new String[2]
-      if (targetPos[1] > position[1]) {directions[1] = "EAST";}
-      else if (targetPos[1] < position[1]) {directions[1] = "WEST";}
-      else {directions[1] = "NEITHER";}
-      if (targetPos[0] > position[0]) {directions[0] = "SOUTH";}
-      else if (targetPos[0] < position[0]) {directions[0] = "NORTH";}
+      if (targetPos[0] > position[0]) {directions[0] = "EAST";}
+      else if (targetPos[0] < position[0]) {directions[0] = "WEST";}
       else {directions[0] = "NEITHER";}
+      if (targetPos[1] > position[1]) {directions[1] = "SOUTH";}
+      else if (targetPos[1] < position[1]) {directions[1] = "NORTH";}
+      else {directions[1] = "NEITHER";}
 
       for (int i = 0; i < movementCandidates.length; i++){
          if (Arrays.asList(directions).contains(movementCandidates[i])) {
@@ -52,17 +55,17 @@ public abstract class Unit {
 
       switch (closest) {
          case "NORTH":
-            this.position[0] -= 1
-            break
+            this.position[1] -= 1;
+            break;
          case "EAST":
-            this.position[1] += 1
-            break
+            this.position[0] += 1;
+            break;
          case "SOUTH":
-            this.position[0] += 1
-            break
+            this.position[1] += 1;
+            break;
          case "WEST":
-            this.position[1] -= 1
-            break
+            this.position[0] -= 1;
+            break;
       }
 
       // add item to new position in city map
@@ -72,6 +75,7 @@ public abstract class Unit {
    }
 
 }
+
 
 
 
