@@ -82,25 +82,35 @@ public class CityMap
         int tempx = coords[0] + 1;
         if (tempx < gridSize[0])
         {
-            unblockedDirectionList[0] = isBlocked(new int[]{tempx, coords[1]});
-        }
-        else
-        {
-            unblockedDirectionList[0] = true;
-        }
-        
-        tempx = coords[0] - 1;
-        if (tempx >= 0)
-        {
             unblockedDirectionList[1] = isBlocked(new int[]{tempx, coords[1]});
         }
         else
         {
             unblockedDirectionList[1] = true;
         }
+        
+        tempx = coords[0] - 1;
+        if (tempx >= 0)
+        {
+            unblockedDirectionList[3] = isBlocked(new int[]{tempx, coords[1]});
+        }
+        else
+        {
+            unblockedDirectionList[3] = true;
+        }
 
         int tempy = coords[1] + 1;
         if (tempy < gridSize[1])
+        {
+            unblockedDirectionList[0] = isBlocked(new int[]{coords[0], tempy});
+        }
+        else
+        {
+            unblockedDirectionList[0] = true;
+        }
+
+        tempy = coords[0] - 1;
+        if (tempy >= 0)
         {
             unblockedDirectionList[2] = isBlocked(new int[]{coords[0], tempy});
         }
@@ -109,17 +119,8 @@ public class CityMap
             unblockedDirectionList[2] = true;
         }
 
-        tempy = coords[0] - 1;
-        if (tempy >= 0)
-        {
-            unblockedDirectionList[3] = isBlocked(new int[]{coords[0], tempy});
-        }
-        else
-        {
-            unblockedDirectionList[3] = true;
-        }
-
         return unblockedDirectionList;
     }
 }
+
 
