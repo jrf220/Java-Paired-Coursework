@@ -31,7 +31,7 @@ public abstract class Unit {
 
       boolean[] blockedSpaces = CityMap.checkAround(this.position);
       if (!(Arrays.asList(blockedSpaces).contains(false))) {return CityMap;}  // nowhere to move and so CityMap is returned.
-      validDir = new String[2]
+      validDir = new String[4];
       for (int i = 0; i < movementCandidates.length; i++){
          if (!(blockedSpaces[i])) {validDir[i] = movementCandidates[i];}
       }
@@ -44,14 +44,19 @@ public abstract class Unit {
       else if (targetPos[1] < position[1]) {directions[1] = "NORTH";}
       else {directions[1] = "NEITHER";}
 
+      common = new String[4]
+      for (int i = 0; i < directions.length; i++) {
+         if (Arrays.asList(validDir).contains(directions[i])) {common.add(validDir[i]);}
+      }
+
       for (int i = 0; i < movementCandidates.length; i++){
-         if (Arrays.asList(directions).contains(movementCandidates[i])) {
-            String closest = movementCandidates[i]
+         if (Arrays.asList(common).contains(movementCandidates[i])) {
+            String closest = movementCandidates[i];
             break;
             }
       }
 
-      // remove item from current city map position
+      CityMap.removeItem(position)
 
       switch (closest) {
          case "NORTH":
@@ -68,13 +73,13 @@ public abstract class Unit {
             break;
       }
 
-      // add item to new position in city map
-
+      CityMap.addItem(this, position)
       if (Arrays.equals(position, targetPos)) {this.unitStatus = "AT_SCENE"}
       return CityMap
    }
 
 }
+
 
 
 
