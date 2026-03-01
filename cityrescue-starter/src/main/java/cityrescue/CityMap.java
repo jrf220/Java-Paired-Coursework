@@ -34,7 +34,7 @@ public class CityMap
         }
         else
         {
-            throw new InputMismatchException("Roadcblock already placed at " + coords[1] +", " + coords[0]);
+            throw new InputMismatchException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
         }
     }
 
@@ -46,7 +46,7 @@ public class CityMap
         }
         else
         {
-            throw new InputMismatchException("Roadcblock is not already placed at " + coords[1] +", " + coords[0]);
+            throw new InputMismatchException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
         }
     }
 
@@ -102,7 +102,7 @@ public class CityMap
         int tempy = coords[1] + 1;
         if (tempy < gridSize[1])
         {
-            unblockedDirectionList[2] = isBlocked(new int[]{tempy, coords[1]});
+            unblockedDirectionList[2] = isBlocked(new int[]{coords[0], tempy});
         }
         else
         {
@@ -112,7 +112,7 @@ public class CityMap
         tempy = coords[0] - 1;
         if (tempy >= 0)
         {
-            unblockedDirectionList[3] = isBlocked(new int[]{tempy, coords[1]});
+            unblockedDirectionList[3] = isBlocked(new int[]{coords[0], tempy});
         }
         else
         {
