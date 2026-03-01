@@ -50,12 +50,12 @@ public class CityMap
         }
     }
 
-    public void addStation(int[] coords, Station stationToBeAdded)
+    public void addItem(int[] coords, Object toBeAdded)
     {
-        cityGrid[coords[1]][coords[0]] = stationToBeAdded;
+        cityGrid[coords[1]][coords[0]] = toBeAdded;
     }
 
-    public void removeStation(int[] coords)
+    public void removeIten(int[] coords)
     {
         cityGrid[coords[1]][coords[0]] = new Object();
     }
@@ -122,3 +122,4 @@ public class CityMap
         return unblockedDirectionList;
     }
 }
+
