@@ -2,6 +2,10 @@ package cityrescue;
 
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
+import cityrescue.Unit;
+import cityrescue.CityMap;
+import cityrescue.Incident;
+
 
 /**
  * CityRescueImpl (Starter)
@@ -12,35 +16,44 @@ import cityrescue.exceptions.*;
 public class CityRescueImpl implements CityRescue {
 
     // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
-    private Object cityMap;
+    private CityMap cityMap;
     private Unit[] units;
     private Station[] station;
     private Incident[] incidents;
-    int tick = 0;
+    private final int MAX_STATIONS = 20;
+    private final int MAX_UNITS = 50;
+    private final int MAX_INCIDENTS = 200;
+    int currentTick = 0;
     
 
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
         // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if ((width <= 0) || (height <=0)) {throw new InvalidGridException("Not valid grid size.");}
+        this.CityMap = new CityMap({width, height});
     }
 
     @Override
     public int[] getGridSize() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        return cityMap.getGridSize();
     }
 
     @Override
-    public void addObstacle(int x, int y) throws InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void addObstacle(int x, int y) throws InvalidLocationException{
+        try{
+            cityMap.addBlockedTile({x, y});
+        } catch (InvalidLocationException e) {
+            throw e;
+        }
     }
 
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        try{
+            cityMap.removedBlockedTile({x, y});
+        } catch (InvalidLocationException e) {
+            throw e;
+        }
     }
 
     @Override
