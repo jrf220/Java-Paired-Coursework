@@ -1,30 +1,21 @@
 package cityrescue;
-
-import java.util.InputMismatchException;
-
 import cityrescue.exceptions.InvalidLocationException;
 
 public class CityMap
 {   
     //The grid uses a 0-based coordinate system. A location (x, y) is in bounds iff 0 ≤ x < width and 0 ≤ y < height.
-    final private int[] gridSize;
+    private int[] gridSize;
     private boolean[][] blocked;
 
-    public CityMap(int[] gridSizeIn, boolean[][] blockedIn)
+    public CityMap(int[] gridSizeIn)
     {
         gridSize = gridSizeIn;
-        blocked = blockedIn;
         blocked = new boolean[gridSizeIn[1]][gridSizeIn[0]];
     }
 
     public int[] getGridSize()
     {
         return gridSize;
-    }
-
-    public Object[][] getCityGrid()
-    {
-        return cityGrid;
     }
 
     public boolean checkInGrid(int[] coords)
@@ -40,7 +31,7 @@ public class CityMap
         return true;
     }
 
-    public void addBlockedTile(int[] coords)
+    public void addBlockedTile(int[] coords) throws InvalidLocationException
     {
         if (checkInGrid(coords) == false)
         {
@@ -56,7 +47,7 @@ public class CityMap
         }
     }
 
-    public void removeBlockedTile(int[] coords)
+    public void removeBlockedTile(int[] coords) throws InvalidLocationException
     {
         if (checkInGrid(coords) == false)
         {
@@ -70,6 +61,7 @@ public class CityMap
         {
             throw new InvalidLocationException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
         }
+        
     }
 
     public boolean[][] getBlocked()
@@ -77,7 +69,7 @@ public class CityMap
         return blocked;
     }
 
-    public boolean isBlocked(int[] coords)
+    public boolean isBlocked(int[] coords) throws InvalidLocationException
     {
         if (checkInGrid(coords) == false)
         {
@@ -86,7 +78,7 @@ public class CityMap
         return blocked[coords[1]][coords[0]];
     }
 
-    public boolean[] checkAround(int[] coords)
+    public boolean[] checkAround(int[] coords) throws InvalidLocationException
     {
         if (checkInGrid(coords) == false)
         {
