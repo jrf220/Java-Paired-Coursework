@@ -5,7 +5,7 @@ import cityrescue.exceptions.*;
 import cityrescue.Unit;
 import cityrescue.CityMap;
 import cityrescue.Incident;
-
+import cityrescue.Station;
 
 /**
  * CityRescueImpl (Starter)
@@ -17,9 +17,9 @@ public class CityRescueImpl implements CityRescue {
 
     // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
     private CityMap cityMap;
-    private Unit[] units;
-    private Station[] station;
-    private Incident[] incidents;
+    private Unit[] units = new Unit[50];
+    private Station[] stations = new Station[20];
+    private Incident[] incidents = new Incident[200];
     private final int MAX_STATIONS = 20;
     private final int MAX_UNITS = 50;
     private final int MAX_INCIDENTS = 200;
@@ -28,9 +28,8 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
-        // TODO: implement
         if ((width <= 0) || (height <=0)) {throw new InvalidGridException("Not valid grid size.");}
-        this.CityMap = new CityMap({width, height});
+        this.cityMap = new CityMap(new int[] {width, height});
     }
 
     @Override
@@ -41,7 +40,7 @@ public class CityRescueImpl implements CityRescue {
     @Override
     public void addObstacle(int x, int y) throws InvalidLocationException{
         try{
-            cityMap.addBlockedTile({x, y});
+            cityMap.addBlockedTile(new int[] {x, y});
         } catch (InvalidLocationException e) {
             throw e;
         }
@@ -50,16 +49,29 @@ public class CityRescueImpl implements CityRescue {
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
         try{
-            cityMap.removedBlockedTile({x, y});
+            cityMap.removedBlockedTile(new int[] {x, y});
         } catch (InvalidLocationException e) {
             throw e;
         }
     }
 
     @Override
-    public int addStation(String name, int x, int y) throws InvalidNameException, InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public int addStation(String name, int x, int y) throws CapacityExceededException, InvalidNameException, InvalidLocationException {
+        int[] location = new int[] {x, y};
+        if (cityMap.isBlocked(location) || cityMap.checkInGrid(location)){
+            throw InvalidLocationException;}
+        if (name.equals("")) {throw InvalidNameException;}
+        int added = 0;
+        Station newStation = new Station(3, name, location);
+        for (int i = 0; i < stations.length; i++) {
+            if (stations[i] == null){
+                stations[i] = newStation;
+                added += 1;
+                break;
+                }
+        }
+        if (added == 0) {throw CapacityExceededException;}
+        return newStation.getStationId();
     }
 
     @Override
