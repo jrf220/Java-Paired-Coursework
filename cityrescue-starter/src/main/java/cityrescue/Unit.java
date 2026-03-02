@@ -1,3 +1,12 @@
+import java.util.Arrays;
+/**
+* The Unit class is an abstract class that is the parent class for the
+* Ambulance, FireEngine and PoliceCar classes.
+*
+* @author Jacob Foot
+* @version 1.0
+* @since 2026
+*/
 public abstract class Unit {
     private String unitType;
     private String unitStatus = "IDLE";
@@ -6,7 +15,7 @@ public abstract class Unit {
     private int unitID;
     private int numberOfUnits;
     private int[] position;  //[x, y]
-    private String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"};
+    private final String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"};
     private Incident targetIncident;
 
     public Unit() {unitID = ++numberOfUnits;}
@@ -15,6 +24,10 @@ public abstract class Unit {
     public int getUnitID() {return unitID;}
     public int getTicksToResolve() {return ticksToResolve;}
     public int[] getPosition() {return position;}
+    public int getManhattanDistance(int[] targetPos){
+        if (!(this.unitStatus.equals("IDLE"))) {return -1;}
+        return (Math.abs(targetPos[0] - position[0]) + Math.abs(targetPos[1] - position[1]));
+    }
     
     public String getUnitStatus() {return unitStatus;}
     public Incident getTargetIncident(){return targetIncident;}
@@ -22,25 +35,41 @@ public abstract class Unit {
     public void setUnitStatus(String unitStatus) {this.unitStatus = unitStatus;}
     public void setTargetIncident(Incident targetIncident) {this.targetIncident = targetIncident;}
     
-    public boolean canHandle(Incident type) {return (type.getIncidentType().equals(canRespondTo));}
-    public Object moveUnit(CityMap cityMap){
+    /**
+    * Checks if this unit can handle a specific incident.
+    *
+    * @param incident the incident to check
+    * @return boolean true/false whether this unit can handle that incident
+    */
+    public boolean canHandle(Incident incident) {return (incident.getIncidentType().equals(canRespondTo));}
+    
+    /**
+    * Moves the unit closer to the incident it is responding to
+    *
+    * @param cityMap the cityMap to be updated
+    * @return the cityMap
+    */
+    public CityMap moveUnit(CityMap cityMap){
         if (!(this.unitStatus.equals("EN_ROUTE"))) {return cityMap;}
         int[] targetPos = this.targetIncident.getPosition();
-        int distanceY = Math.abs(targetPos[1] - position[1]);
-        int distanceX = Math.abs(targetPos[0] - position[0]);
 
         boolean[] validDirections = cityMap.checkAround(this.position);
 
         if (targetPos[0] >= position[0]) {validDirections[3] = false;}
         if (targetPos[0] <= position[0]) {validDirections[1] = false;}
         if (targetPos[1] >= position[1]) {validDirections[0] = false;}
-        if (targetPos[1] =< position[1]) {validDirections[2] = false;}
+        if (targetPos[1] <= position[1]) {validDirections[2] = false;}
 
-        if (!(Arrays.asList(validDirections).contains(true))) {return cityMap;}  // nowhere to move and so CityMap is returned.
+        int checkTrue = 0;
+        for (int i = 0; i < validDirections.length; i++){
+            if (validDirections[i]) {checkTrue += 1;}
+        }  
+        if (checkTrue == 0){return cityMap;} // nowhere to move and so CityMap is returned.
 
+        String closest = "";
         for (int i = 0; i < movementCandidates.length; i++){
             if (validDirections[i]) {
-                String closest = movementCandidates[i];
+                closest = movementCandidates[i];
                 break;
                 }
         }
@@ -58,10 +87,11 @@ public abstract class Unit {
             case "WEST":
                 this.position[0] -= 1;
                 break;
+            default:
+                return cityMap;
         }
 
-        if (Arrays.equals(position, targetPos)) {this.unitStatus = "AT_SCENE";}
+        if (Arrays.equals(this.position, targetPos)) {this.unitStatus = "AT_SCENE";}
         return cityMap;
     }
-
 }
