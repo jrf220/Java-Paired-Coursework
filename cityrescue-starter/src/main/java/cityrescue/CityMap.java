@@ -2,6 +2,8 @@ package cityrescue;
 
 import java.util.InputMismatchException;
 
+import cityrescue.exceptions.InvalidLocationException;
+
 public class CityMap
 {   
     //The grid uses a 0-based coordinate system. A location (x, y) is in bounds iff 0 ≤ x < width and 0 ≤ y < height.
@@ -46,18 +48,8 @@ public class CityMap
         }
         else
         {
-            throw new InputMismatchException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
+            throw new InvalidLocationException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
         }
-    }
-
-    public void addItem(int[] coords, Object toBeAdded)
-    {
-        cityGrid[coords[1]][coords[0]] = toBeAdded;
-    }
-
-    public void removeIten(int[] coords)
-    {
-        cityGrid[coords[1]][coords[0]] = new Object();
     }
 
     public boolean[][] getBlocked()
@@ -70,11 +62,6 @@ public class CityMap
         return blocked[coords[1]][coords[0]];
     }
 
-    public boolean legalMove()
-    {
-        return false;
-    }
-    
     public boolean[] checkAround(int[] coords)
     {
         boolean[] unblockedDirectionList = new boolean[4]; // In the order: N, E, S, W
@@ -122,5 +109,3 @@ public class CityMap
         return unblockedDirectionList;
     }
 }
-
-
