@@ -22,6 +22,16 @@ public class Station {
         position = inPosition;
     }
 
+    public int getStationID()
+    {
+        return stationID;
+    }
+
+    public String getStationName()
+    {
+        return stationName;
+    }
+
     public void setStationCapacity(int inCapacity) throws InvalidCapacityException
     {
         if (currentCapacity > inCapacity)
