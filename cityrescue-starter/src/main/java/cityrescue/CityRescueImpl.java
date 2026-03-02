@@ -71,19 +71,35 @@ public class CityRescueImpl implements CityRescue {
                 }
         }
         if (added == 0) {throw CapacityExceededException;}
-        return newStation.getStationId();
+        return newStation.getStationID();
     }
 
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int removed = 0;
+        for (int i = 0; i < stations.length; i++){
+            if (stations[i].getStationID() == stationId){
+                if (stations[i].isEmpty()){
+                    stations[i] = null;
+                    removed += 1;
+                } else {throw IllegalStateException;}
+            }
+        }
+        if (removed == 0) {throw IDNotRecognisedException;}
     }
 
     @Override
     public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int updated = 0;
+        for (int i = 0; i < stations.length; i++){
+            if (stations[i].getStationID() == stationId){
+                if (maxUnits > stations[i].getMaxCapacity()){
+                    stations[i] = null;
+                    updated += 1;
+                } else {throw InvalidCapacityException;}
+            }
+        }
+        if (updated == 0) {throw IDNotRecognisedException;}
     }
 
     @Override
@@ -93,9 +109,40 @@ public class CityRescueImpl implements CityRescue {
     }
 
     @Override
-    public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException, CapacityExceededException {
+        switch (type) {
+            case AMBULANCE:
+                Ambulance newUnit = new Ambulance();
+            case FIRE_ENGINE:
+                FireEngine newUnit = new FireEngine();
+            case POLICE_CAR:
+                PoliceCar newUnit = new PoliceCar();
+            default:
+                throw InvalidUnitException;
+        }
+
+        int exist = 0;
+        for (int i = 0; i < stations.length; i++){
+            if (stations[i].getStationID() == stationId){
+                try {
+                    stations[i].addUnit(newUnit);
+                } catch (CapacityExceededException e) {
+                    throw e;
+                } finally {exist += 1;}
+            }
+        }
+        if (exist == 0){throw IDNotRecognisedException;}
+
+        int added = 0;
+        for (int i = 0; i < units.length; i++) {
+            if (units[i] == null){
+                units[i] = newUnit;
+                added += 1;
+                break;
+                }
+        }
+        if (added == 0) {throw CapacityExceededException;}
+        return newUnit.getUnitID();
     }
 
     @Override
