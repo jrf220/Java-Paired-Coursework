@@ -1,3 +1,4 @@
+package cityrescue;
 /**
 * The Incident class represents the three types of incidents that can exist
 * in this city map, Fire, Medical and Crime, and how to handle these.
@@ -56,3 +57,4 @@ public class Incident{
         return lowestUnit;
     }
 }
+
