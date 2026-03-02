@@ -3,7 +3,14 @@ package cityrescue;
 import cityrescue.exceptions.CapacityExceededException;
 import cityrescue.exceptions.IDNotRecognisedException;
 import cityrescue.exceptions.InvalidCapacityException;
-
+/**
+* The Station Class is a class used to keep track of a particular stations status.
+* This includes its position, parking lot and the capcaity of it and whether it changes or not.
+* 
+* @author Appsharan Chandrarajan
+* @version 1.0
+* @since 2026
+*/
 public class Station {
     private int numberOfStations;
     private int stationID;
@@ -32,6 +39,34 @@ public class Station {
         return stationName;
     }
 
+    public int[] getPosition()
+    {
+        return position;
+    }
+
+    public boolean isEmpty()
+    {
+        return currentCapacity == 0;
+    }
+
+    public int getMaxCapacity()
+    {
+        return maxCapacity;
+    }
+
+    /**
+    * Checks if the Car park is full or not using the Current Capacity and
+    * the maximmum capacity of the station.
+    */
+    public boolean carParkFull()
+    {
+        return currentCapacity == maxCapacity;
+    }
+
+    /**
+    * This method is here for when the capacity of a station is increased or decreased.
+    * It adjusts the carPark accordingly.
+    */
     public void setStationCapacity(int inCapacity) throws InvalidCapacityException
     {
         if (currentCapacity > inCapacity)
@@ -40,6 +75,7 @@ public class Station {
         }
         else
         {
+            //This is copying over all the units to the bigger car park
             maxCapacity = inCapacity;
 
             Unit[] unitTempCarPark = new Unit[inCapacity];
@@ -50,12 +86,11 @@ public class Station {
             carPark = unitTempCarPark;
         }
     }
-
-    public boolean carParkFull()
-    {
-        return currentCapacity == maxCapacity;
-    }
     
+    /**
+    * This adds a unit to the car park of the station and also checks if is full first.
+    * If the car park is full then it throws an excpetion
+    */
     public void addUnit(Unit unitToBeAdded) throws CapacityExceededException
     {   
         if (carParkFull() == true)
@@ -68,6 +103,7 @@ public class Station {
         
             for (int i = 0; i < carPark.length; i++)
             {
+                //Adds the new unit in the empty space in the carPark array.
                 if (carPark[i] == null)
                 {
                     carPark[i] = unitToBeAdded;
@@ -76,6 +112,10 @@ public class Station {
         }
     }
     
+    /**
+    * This removes a unit from the car park of a station and if the unit was not present then
+    * it will throw an exception
+    */
     public void removeUnit(int unitIDtoBeRemoved) throws IDNotRecognisedException
     {
         boolean untiRemoved = false;
@@ -86,6 +126,7 @@ public class Station {
             {
                 carPark[i] = null;
                 untiRemoved = true;
+                break;
             }
         }
         if (untiRemoved == false)
