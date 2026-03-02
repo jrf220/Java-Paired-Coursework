@@ -8,14 +8,13 @@ public class CityMap
 {   
     //The grid uses a 0-based coordinate system. A location (x, y) is in bounds iff 0 ≤ x < width and 0 ≤ y < height.
     final private int[] gridSize;
-    final private Object[][] cityGrid;
     private boolean[][] blocked;
 
-    public CityMap(int[] gridSizeIn, Object[][] cityGridIn, boolean[][] blockedIn)
+    public CityMap(int[] gridSizeIn, boolean[][] blockedIn)
     {
         gridSize = gridSizeIn;
-        cityGrid = cityGridIn;
         blocked = blockedIn;
+        blocked = new boolean[gridSizeIn[1]][gridSizeIn[0]];
     }
 
     public int[] getGridSize()
@@ -28,20 +27,41 @@ public class CityMap
         return cityGrid;
     }
 
+    public boolean checkInGrid(int[] coords)
+    {
+        if (coords[0] >= gridSize[0] || coords[0] < 0)
+        {
+            return false;
+        }
+        else if (coords[1] >= gridSize[1] || coords[1] < 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void addBlockedTile(int[] coords)
     {
+        if (checkInGrid(coords) == false)
+        {
+            throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+        }
         if (blocked[coords[1]][coords[0]] == false)
         {
             blocked[coords[1]][coords[0]] = true;
         }
         else
         {
-            throw new InputMismatchException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+            throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
         }
     }
 
     public void removeBlockedTile(int[] coords)
     {
+        if (checkInGrid(coords) == false)
+        {
+            throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+        }
         if (blocked[coords[1]][coords[0]] == true)
         {
             blocked[coords[1]][coords[0]] = false;
@@ -59,11 +79,20 @@ public class CityMap
 
     public boolean isBlocked(int[] coords)
     {
+        if (checkInGrid(coords) == false)
+        {
+            throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+        }
         return blocked[coords[1]][coords[0]];
     }
 
     public boolean[] checkAround(int[] coords)
     {
+        if (checkInGrid(coords) == false)
+        {
+            throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+        }
+
         boolean[] unblockedDirectionList = new boolean[4]; // In the order: N, E, S, W
 
         int tempx = coords[0] + 1;
