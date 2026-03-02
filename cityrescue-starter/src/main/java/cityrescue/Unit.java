@@ -47,10 +47,9 @@ public abstract class Unit {
     * Moves the unit closer to the incident it is responding to
     *
     * @param cityMap the cityMap to be updated
-    * @return the cityMap
     */
-    public CityMap moveUnit(CityMap cityMap){
-        if (!(this.unitStatus.equals("EN_ROUTE"))) {return cityMap;}
+    public void moveUnit(CityMap cityMap){
+        if (!(this.unitStatus.equals("EN_ROUTE"))) {return;}
         int[] targetPos = this.targetIncident.getPosition();
 
         boolean[] validDirections = cityMap.checkAround(this.position);
@@ -64,7 +63,7 @@ public abstract class Unit {
         for (int i = 0; i < validDirections.length; i++){
             if (validDirections[i]) {checkTrue += 1;}
         }  
-        if (checkTrue == 0){return cityMap;} // nowhere to move and so CityMap is returned.
+        if (checkTrue == 0){return;} // nowhere to move and so function is returned.
 
         String closest = "";
         for (int i = 0; i < movementCandidates.length; i++){
@@ -88,10 +87,10 @@ public abstract class Unit {
                 this.position[0] -= 1;
                 break;
             default:
-                return cityMap;
+                return;
         }
 
         if (Arrays.equals(this.position, targetPos)) {this.unitStatus = "AT_SCENE";}
-        return cityMap;
     }
 }
+
