@@ -1,3 +1,4 @@
+package cityrescue;
 import java.util.Arrays;
 /**
 * The Unit class is an abstract class that is the parent class for the
@@ -93,4 +94,3 @@ public abstract class Unit {
         if (Arrays.equals(this.position, targetPos)) {this.unitStatus = "AT_SCENE";}
     }
 }
-
