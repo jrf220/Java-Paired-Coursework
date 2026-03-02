@@ -37,13 +37,16 @@ public class CityMap
         {
             throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
         }
-        if (blocked[coords[1]][coords[0]] == false)
-        {
-            blocked[coords[1]][coords[0]] = true;
-        }
         else
         {
-            throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+            if (blocked[coords[1]][coords[0]] == false)
+            {
+                blocked[coords[1]][coords[0]] = true;
+            }
+           else
+            {
+                throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
+            }
         }
     }
 
@@ -51,17 +54,19 @@ public class CityMap
     {
         if (checkInGrid(coords) == false)
         {
-            throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
-        }
-        if (blocked[coords[1]][coords[0]] == true)
-        {
-            blocked[coords[1]][coords[0]] = false;
+            throw new InvalidLocationException("Roadblock already placed at " + coords[0] +", " + coords[1]);
         }
         else
         {
-            throw new InvalidLocationException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
+            if (blocked[coords[1]][coords[0]] == true)
+            {
+                blocked[coords[1]][coords[0]] = false;
+            }
+            else
+            {
+                throw new InvalidLocationException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
+            }
         }
-        
     }
 
     public boolean[][] getBlocked()
@@ -75,7 +80,10 @@ public class CityMap
         {
             throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
         }
-        return blocked[coords[1]][coords[0]];
+        else
+        {
+            return blocked[coords[1]][coords[0]];
+        }
     }
 
     public boolean[] checkAround(int[] coords) throws InvalidLocationException
@@ -85,48 +93,51 @@ public class CityMap
             throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
         }
 
-        boolean[] unblockedDirectionList = new boolean[4]; // In the order: N, E, S, W
-
-        int tempx = coords[0] + 1;
-        if (tempx < gridSize[0])
-        {
-            unblockedDirectionList[1] = isBlocked(new int[]{tempx, coords[1]});
-        }
         else
         {
-            unblockedDirectionList[1] = true;
-        }
+            boolean[] unblockedDirectionList = new boolean[4]; // In the order: N, E, S, W
+
+            int tempx = coords[0] + 1;
+            if (tempx < gridSize[0])
+            {
+                unblockedDirectionList[1] = isBlocked(new int[]{tempx, coords[1]});
+            }
+            else
+            {
+                unblockedDirectionList[1] = true;
+            }
         
-        tempx = coords[0] - 1;
-        if (tempx >= 0)
-        {
-            unblockedDirectionList[3] = isBlocked(new int[]{tempx, coords[1]});
-        }
-        else
-        {
-            unblockedDirectionList[3] = true;
-        }
+            tempx = coords[0] - 1;
+            if (tempx >= 0)
+            {
+                unblockedDirectionList[3] = isBlocked(new int[]{tempx, coords[1]});
+            }
+            else
+            {
+                unblockedDirectionList[3] = true;
+            }
 
-        int tempy = coords[1] + 1;
-        if (tempy < gridSize[1])
-        {
-            unblockedDirectionList[0] = isBlocked(new int[]{coords[0], tempy});
-        }
-        else
-        {
-            unblockedDirectionList[0] = true;
-        }
+            int tempy = coords[1] + 1;
+            if (tempy < gridSize[1])
+            {
+                unblockedDirectionList[0] = isBlocked(new int[]{coords[0], tempy});
+            }
+            else
+            {
+                unblockedDirectionList[0] = true;
+            }
 
-        tempy = coords[0] - 1;
-        if (tempy >= 0)
-        {
-            unblockedDirectionList[2] = isBlocked(new int[]{coords[0], tempy});
-        }
-        else
-        {
-            unblockedDirectionList[2] = true;
-        }
+            tempy = coords[0] - 1;
+            if (tempy >= 0)
+            {
+                unblockedDirectionList[2] = isBlocked(new int[]{coords[0], tempy});
+            }
+            else
+            {
+                unblockedDirectionList[2] = true;
+            }
 
-        return unblockedDirectionList;
+            return unblockedDirectionList;
+        }
     }
 }
