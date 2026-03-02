@@ -1,5 +1,7 @@
 package cityrescue;
 import java.util.Arrays;
+
+import cityrescue.exceptions.InvalidLocationException;
 /**
 * The Unit class is an abstract class that is the parent class for the
 * Ambulance, FireEngine and PoliceCar classes.
@@ -49,11 +51,15 @@ public abstract class Unit {
     *
     * @param cityMap the cityMap to be updated
     */
-    public void moveUnit(CityMap cityMap){
+    public void moveUnit(CityMap cityMap) throws InvalidLocationException{
         if (!(this.unitStatus.equals("EN_ROUTE"))) {return;}
         int[] targetPos = this.targetIncident.getPosition();
 
-        boolean[] validDirections = cityMap.checkAround(this.position);
+        boolean[] validDirections;
+
+        try{
+            validDirections = cityMap.checkAround(this.position);
+        } catch (InvalidLocationException e) {throw e;}
 
         if (targetPos[0] >= position[0]) {validDirections[3] = false;}
         if (targetPos[0] <= position[0]) {validDirections[1] = false;}
@@ -94,3 +100,4 @@ public abstract class Unit {
         if (Arrays.equals(this.position, targetPos)) {this.unitStatus = "AT_SCENE";}
     }
 }
+
