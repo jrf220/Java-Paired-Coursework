@@ -54,19 +54,26 @@ public class Station {
         return currentCapacity;
     }
 
-    public boolean isEmpty()
-    {
-        return currentCapacity == 0;
-    }
-
     public int getMaxCapacity()
     {
         return maxCapacity;
     }
 
     /**
+    * Checks if the Car park empty.
+    * 
+    * @return Returns a boolean value specifyin when the car park of a station is empty
+    */
+    public boolean isEmpty()
+    {
+        return currentCapacity == 0;
+    }
+
+    /**
     * Checks if the Car park is full or not using the Current Capacity and
     * the maximmum capacity of the station.
+    * 
+    * @return This returns whether the car park is full or not
     */
     public boolean carParkFull()
     {
@@ -76,6 +83,8 @@ public class Station {
     /**
     * This method is here for when the capacity of a station is increased or decreased.
     * It adjusts the carPark accordingly.
+    * 
+    * @param This takes in an integer that specifies the new capacity of a given station
     */
     public void setStationCapacity(int inCapacity) throws InvalidCapacityException
     {
@@ -100,6 +109,8 @@ public class Station {
     /**
     * This adds a unit to the car park of the station and also checks if is full first.
     * If the car park is full then it throws an excpetion
+    * 
+    * @param Takes in the unit to be added to a given station
     */
     public void addUnit(Unit unitToBeAdded) throws CapacityExceededException
     {   
@@ -125,6 +136,8 @@ public class Station {
     /**
     * This removes a unit from the car park of a station and if the unit was not present then
     * it will throw an exception
+    * 
+    * @param Takes in an integer that is the unit id of the unit to be removed from the station
     */
     public void removeUnit(int unitIDtoBeRemoved) throws IDNotRecognisedException
     {
