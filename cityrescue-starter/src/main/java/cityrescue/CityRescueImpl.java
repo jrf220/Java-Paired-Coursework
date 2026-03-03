@@ -117,11 +117,11 @@ public class CityRescueImpl implements CityRescue {
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException, CapacityExceededException {
         switch (type) {
             case AMBULANCE:
-                Ambulance newUnit = new Ambulance();
+                Ambulance newUnit = new Ambulance(stationId);
             case FIRE_ENGINE:
-                FireEngine newUnit = new FireEngine();
+                FireEngine newUnit = new FireEngine(stationId);
             case POLICE_CAR:
-                PoliceCar newUnit = new PoliceCar();
+                PoliceCar newUnit = new PoliceCar(stationId);
             default:
                 throw InvalidUnitException;
         }
@@ -166,26 +166,30 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
-        Unit unitToTransfer;
-        Station newStation;
+        int unitIndex = -1;
+        int stationIndex = -1;
         int exist = 0;
         for (int i = 0; i < units.length; i++) {
             if (units[i].getUnitID() == unitId){
-                unitToTransfer = units[i];
+                unitIndex = i;
                 exist += 1;
                 }
         }
         for (int i = 0; i < stations.length; i++) {
             if (units[i].getUnitID() == newStationId){
-                newStation = stations[i];
+                stationIndex = i;
                 exist += 1;
                 }
         }
         if (exist < 2) {throw new IDNotRecognisedException("ID not recognised");}
-        if ((unitToTransfer.getUnitStatus() != UnitStatus.IDLE) && (newStation.getMaxCapacity() != newStation.getCurrentCapacity())){
+        if ((units[unitIndex].getUnitStatus() != UnitStatus.IDLE) && (stations[stationIndex].carParkFull())){
             throw new IllegalStateException("State Illegal");
             }
-        }
+        units[unitIndex].setHomeStationId(newStationId);
+        int[] newPos = stations[stationIndex].getPosition();
+        units[unitIndex].setPosition(newPos);
+        Unit unitToTransfer = units[unitIndex];
+        stations[stationIndex].addUnit(unitToTransfer);
     }
 
     @Override
