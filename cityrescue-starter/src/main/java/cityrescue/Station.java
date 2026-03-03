@@ -62,7 +62,7 @@ public class Station {
     /**
     * Checks if the Car park empty.
     * 
-    * @return Returns a boolean value specifyin when the car park of a station is empty
+    * @return Returns a boolean value specifying when the car park of a station is empty
     */
     public boolean isEmpty()
     {
