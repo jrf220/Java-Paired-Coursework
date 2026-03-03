@@ -7,8 +7,8 @@ class Ambulance extends Unit {
     private final IncidentType canRespondTo = IncidentType.MEDICAL;
     private final int ticksToResolve = 2;
 
-    Ambulance(){
+    Ambulance(int homeStationId){
         // this is a constructor method
-        super();
+        super(homeStationId);
     }
 }
