@@ -33,7 +33,7 @@ public abstract class Unit {
     public UnitType getUnitType() {return unitType;}
     public IncidentType getCanRespondTo() {return canRespondTo;}
     public int getUnitID() {return unitID;}
-    public int getTicksToResolve() {return ticksToResolve;}
+    public abstract int getTicksToResolve();
     public int[] getPosition() {return position;}
     public int getHomeStationId() {return homeStationId;}
     public UnitStatus getUnitStatus() {return unitStatus;}
@@ -50,15 +50,9 @@ public abstract class Unit {
     public void setPosition(int[] newPos) {this.position = newPos;}
     public void setWork(int work) {this.work = work;}
     public void setWork() {work -= 1;}
-    public void removeTargetIncident() {this.targetIncident = null;}
 
-    /**
-    * Checks if this unit can handle a specific incident.
-    *
-    * @param incident the incident to check
-    * @return boolean true/false whether this unit can handle that incident
-    */
-    public boolean canHandle(Incident incident) {return (incident.getIncidentType().equals(canRespondTo));}
+    public void removeTargetIncident() {this.targetIncident = null;}
+    public abstract boolean canHandle(Incident incident);
     
     /**
     * Moves the unit closer to the incident it is responding to
