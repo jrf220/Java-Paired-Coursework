@@ -18,7 +18,7 @@ public abstract class Unit {
     private IncidentType canRespondTo;
     private int ticksToResolve;
     private int unitID;
-    private int numberOfUnits;
+    private static int numberOfUnits;
     private int homeStationId;
     private int[] position;  //[x, y]
     private final String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"};
@@ -29,6 +29,7 @@ public abstract class Unit {
         unitID = ++numberOfUnits;
         this.homeStationId = homeStationId;
         }
+    public static int getNumberOfUnits() {return numberOfUnits;}
     public UnitType getUnitType() {return unitType;}
     public IncidentType getCanRespondTo() {return canRespondTo;}
     public int getUnitID() {return unitID;}
@@ -115,3 +116,4 @@ public abstract class Unit {
             }
     }
 }
+
