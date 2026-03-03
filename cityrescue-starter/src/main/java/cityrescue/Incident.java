@@ -13,14 +13,16 @@ public class Incident{
     private IncidentType incidentType;
     private int incidentID;
     private static int numberOfIncidents = 0;
-    private int severity = 1;
-    private IncidentStatus incidentStatus;
+    private int severity;
+    private IncidentStatus incidentStatus = IncidentStatus.REPORTED;
     private int[] position;
 
-    public Incident(IncidentType incidentType){
+    public Incident(IncidentType incidentType, int severity, int x, int y){
         this.incidentType = incidentType;
+        this.severity = severity;
         this.incidentStatus = IncidentStatus.REPORTED;
-        incidentID = ++numberOfIncidents;
+        this.incidentID = ++numberOfIncidents;
+        this.position = new int[] {x, y};
     }
 
     public IncidentType getIncidentType() {return this.incidentType;}
