@@ -37,7 +37,7 @@ public abstract class Unit {
     public UnitStatus getUnitStatus() {return unitStatus;}
     public Incident getTargetIncident(){return targetIncident;}
     public int getManhattanDistance(int[] targetPos){
-        if (!(this.unitStatus.equals("IDLE"))) {return -1;}
+        if (!(this.unitStatus.equals(UnitStatus.IDLE))) {return -1;}
         return (Math.abs(targetPos[0] - position[0]) + Math.abs(targetPos[1] - position[1]));
     }
     
