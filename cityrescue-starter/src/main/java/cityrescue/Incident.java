@@ -30,6 +30,9 @@ public class Incident{
     public static int getNumberOfIncidents() {return numberOfIncidents;}
     public IncidentStatus getIncidentStatus() {return incidentStatus;}
     public int[] getPosition() {return position;}
+    public int getSeverity() {return severity;}
+
+    public void setSeverity(int severity) {this.severity = severity;}
     public void setIncidentStatus(IncidentStatus incidentStatus) {this.incidentStatus = incidentStatus;}
     public void setPosition(int[] position) {this.position = position;}
     
@@ -37,10 +40,10 @@ public class Incident{
     * Cancels a reported or dispatched unit
     *
     */
-    public void cancelIncident(){
+    public void cancelIncident() throws IllegalStateException{
         if (incidentStatus.equals(IncidentStatus.REPORTED) || incidentStatus.equals(IncidentStatus.DISPATCHED)){
             this.setIncidentStatus(IncidentStatus.CANCELLED);
-        }
+        } else {throw new IllegalStateException("Illegal State");}
     }
 
     /**
