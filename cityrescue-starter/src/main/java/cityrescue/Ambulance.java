@@ -1,6 +1,10 @@
+package cityrescue;
+import cityrescue.enums.IncidentType;
+import cityrescue.enums.UnitType;
+
 class Ambulance extends Unit {
-    private final String unitType = "AMBULANCE";
-    private final String canRespondTo = "MEDICAL";
+    private final UnitType unitType = UnitType.AMBULANCE;
+    private final IncidentType canRespondTo = IncidentType.MEDICAL;
     private final int ticksToResolve = 2;
 
     Ambulance(){
@@ -8,5 +12,3 @@ class Ambulance extends Unit {
         super();
     }
 }
-
-
