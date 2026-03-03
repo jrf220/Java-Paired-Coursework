@@ -7,8 +7,8 @@ class FireEngine extends Unit {
     private final IncidentType canRespondTo = IncidentType.FIRE;
     private final int ticksToResolve = 4;
 
-    FireEngine(){
+    FireEngine(int homeStationId){
         // this is a constructor method
-        super();
+        super(homeStationId);
     }
 }
