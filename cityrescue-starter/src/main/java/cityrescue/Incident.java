@@ -1,6 +1,7 @@
 package cityrescue;
 import cityrescue.enums.IncidentStatus;
 import cityrescue.enums.IncidentType;
+import cityrescue.enums.UnitStatus;
 /**
 * The Incident class represents the three types of incidents that can exist
 * in this city map, Fire, Medical and Crime, and how to handle these.
@@ -50,18 +51,27 @@ public class Incident{
     * Checks which unit is closest to this incident
     *
     * @param units a list of all valid units
-    * @return the closest instance of the Unit class
+    * @return the id of the closest instance of the Unit class
     */
-    public Unit closestUnit(Unit[] units){
-        Unit lowestUnit = units[0];
+    public int closestUnit(Unit[] units){
+        int lowestUnitId = -1;
         int lowestMan = 0;
         for (int i = 0; i < units.length; i++){
             int currentMan = units[i].getManhattanDistance(this.position);
-            if ((currentMan < lowestMan) && (units[i].canHandle(this))){
-                lowestMan = currentMan;
-                lowestUnit = units[i];
+            if ((units[i].canHandle(this) && units[i].getUnitStatus().equals(UnitStatus.IDLE))){
+                if (currentMan < lowestMan){
+                    lowestMan = currentMan;
+                    lowestUnitId = units[i].getUnitID();
+                } else if (currentMan == lowestMan){
+                    if (units[i].getUnitID() < lowestUnitId){
+                        lowestMan = currentMan;
+                        lowestUnitId = units[i].getUnitID();
+                        /* due to the way we have coded, it is impossible for two units to have the same
+                        *  unit ID and so we do not need to handle the cases where they do. */
+                    }
                 }
+            }
         }
-        return lowestUnit;
+        return lowestUnitId;
     }
 }
