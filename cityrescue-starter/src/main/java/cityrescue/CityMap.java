@@ -34,6 +34,10 @@ public class CityMap
     /**
     * This method checks whether the coordinates entered are within the grid and returns true if
     * they are and false if they are not.
+    * 
+    * @param coords This takes in a set of coordinates to check as an array {x, y}.
+    * 
+    * @return Returns a boolean value that corresponds to whether the item is in the grid or not.
     */
     public boolean checkInGrid(int[] coords)
     {
@@ -51,6 +55,8 @@ public class CityMap
     /**
     * This adds a blocked tile to the grid and checks whether the coordinates are valid
     * and the blockage is not placed on another.
+    * 
+    * @param coords This takes in a set of coordinates to check as an array {x, y}.
     */
     public void addBlockedTile(int[] coords) throws InvalidLocationException
     {
@@ -75,6 +81,8 @@ public class CityMap
     /**
     * This removes a blocked tile on the  grid and checks whether the coordinates are valid
     * and when removing, you are not removing from something that is not there.
+    * 
+    * @param coords This takes in a set of coordinates to check as an array {x, y}.
     */
     public void removeBlockedTile(int[] coords) throws InvalidLocationException
     {
@@ -99,6 +107,11 @@ public class CityMap
     /**
     * Checks whether the coordinates entered are within the grid, and if they are it will
     * return whether there is a blockage placed there or not.
+    * 
+    * @param coords This takes in a set of coordinates to check as an array {x, y}.
+    * 
+    * @return Returns a boolean value that corresponds to whether the coordinates given to 
+    * the method are blocked or not on the blocked 2D array.
     */
     public boolean isBlocked(int[] coords) throws InvalidLocationException
     {
@@ -115,6 +128,12 @@ public class CityMap
     /**
     * If the coordinates entered are within the grid, it checks the directions around the
     * location to see if they can move N, E, S, W without moving of the grid or into a blockage.
+    * 
+    * @param coords This takes in a set of coordinates to check as an array {x, y}.
+    * 
+    * @return Returns a boolean array that specifies the directions in which a unit at a given
+    * location can move where each boolean value in the array corresponds to a direction in the
+    * following order: {N, E, S, W}.
     */
     public boolean[] checkAround(int[] coords) throws InvalidLocationException
     {
