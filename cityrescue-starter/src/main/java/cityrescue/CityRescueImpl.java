@@ -104,8 +104,12 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public int[] getStationIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int[] stationIds = new int[stations.length];
+        for (int i = 0; i < stations.length; i++){
+            if (stations[i] != null){
+                stationIds[i] = stations[i].getStationID();
+            }
+        }
     }
 
     @Override
@@ -147,8 +151,16 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int exist = 0;
+        for (int i = 0; i < units.length; i++) {
+            if (units[i].getUnitID() == unitId){
+                if (units[i].getUnitStatus().equals(UnitStatus.IDLE)) {throw IllegalStateException;}
+                exist += 1;
+                units[i].setUnitStatus(UnitStatus.OUT_OF_SERVICE);
+                break;
+                }
+        }
+        if (exist == 0) {throw IDNotRecognisedException;}
     }
 
     @Override
