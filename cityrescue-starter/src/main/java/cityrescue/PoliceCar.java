@@ -1,6 +1,10 @@
+package cityrescue;
+import cityrescue.enums.IncidentType;
+import cityrescue.enums.UnitType;
+
 class PoliceCar extends Unit {
-    private final String unitType = "POLICE_CAR";
-    private final String canRespondTo = "CRIME";
+    private final UnitType unitType = UnitType.POLICE_CAR;
+    private final IncidentType canRespondTo = IncidentType.CRIME;
     private final int ticksToResolve = 3;
 
     PoliceCar(){
@@ -8,5 +12,3 @@ class PoliceCar extends Unit {
         super();
     }
 }
-
-
