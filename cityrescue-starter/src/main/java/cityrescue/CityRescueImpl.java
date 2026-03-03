@@ -59,8 +59,8 @@ public class CityRescueImpl implements CityRescue {
     public int addStation(String name, int x, int y) throws CapacityExceededException, InvalidNameException, InvalidLocationException {
         int[] location = new int[] {x, y};
         if (cityMap.isBlocked(location) || cityMap.checkInGrid(location)){
-            throw InvalidLocationException;}
-        if (name.equals("")) {throw InvalidNameException;}
+            throw new InvalidLocationException("Location Invalid");}
+        if (name.equals("")) {throw new InvalidNameException("Name Invalid.");}
         int added = 0;
         Station newStation = new Station(3, name, location);
         for (int i = 0; i < stations.length; i++) {
@@ -70,7 +70,7 @@ public class CityRescueImpl implements CityRescue {
                 break;
                 }
         }
-        if (added == 0) {throw CapacityExceededException;}
+        if (added == 0) {throw new CapacityExceededException("Capacity Exceeded");}
         return newStation.getStationID();
     }
 
@@ -82,10 +82,10 @@ public class CityRescueImpl implements CityRescue {
                 if (stations[i].isEmpty()){
                     stations[i] = null;
                     removed += 1;
-                } else {throw IllegalStateException;}
+                } else {throw new IllegalStateException("State Illegal");}
             }
         }
-        if (removed == 0) {throw IDNotRecognisedException;}
+        if (removed == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
     @Override
@@ -96,10 +96,10 @@ public class CityRescueImpl implements CityRescue {
                 if (maxUnits > stations[i].getMaxCapacity()){
                     stations[i] = null;
                     updated += 1;
-                } else {throw InvalidCapacityException;}
+                } else {throw new InvalidCapacityException("Invalid Capacity");}
             }
         }
-        if (updated == 0) {throw IDNotRecognisedException;}
+        if (updated == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
     @Override
@@ -110,6 +110,7 @@ public class CityRescueImpl implements CityRescue {
                 stationIds[i] = stations[i].getStationID();
             }
         }
+        return stationIds;
     }
 
     @Override
@@ -135,7 +136,7 @@ public class CityRescueImpl implements CityRescue {
                 } finally {exist += 1;}
             }
         }
-        if (exist == 0){throw IDNotRecognisedException;}
+        if (exist == 0){throw new IDNotRecognisedException("ID not recognised");}
 
         int added = 0;
         for (int i = 0; i < units.length; i++) {
@@ -145,7 +146,7 @@ public class CityRescueImpl implements CityRescue {
                 break;
                 }
         }
-        if (added == 0) {throw CapacityExceededException;}
+        if (added == 0) {throw new CapacityExceededException("Capacity Exceeded");}
         return newUnit.getUnitID();
     }
 
@@ -154,13 +155,13 @@ public class CityRescueImpl implements CityRescue {
         int exist = 0;
         for (int i = 0; i < units.length; i++) {
             if (units[i].getUnitID() == unitId){
-                if (units[i].getUnitStatus().equals(UnitStatus.IDLE)) {throw IllegalStateException;}
+                if (units[i].getUnitStatus().equals(UnitStatus.IDLE)) {throw new IllegalStateException("State Illegal");}
                 exist += 1;
                 units[i].setUnitStatus(UnitStatus.OUT_OF_SERVICE);
                 break;
                 }
         }
-        if (exist == 0) {throw IDNotRecognisedException;}
+        if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
     @Override
@@ -234,4 +235,3 @@ public class CityRescueImpl implements CityRescue {
         // TODO: implement
         throw new UnsupportedOperationException("Not implemented yet");
     }
-}
