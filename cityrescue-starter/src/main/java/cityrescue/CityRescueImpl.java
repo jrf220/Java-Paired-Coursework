@@ -1,237 +1,109 @@
 package cityrescue;
-
-import cityrescue.enums.*;
-import cityrescue.exceptions.*;
-import cityrescue.Unit;
-import cityrescue.CityMap;
-import cityrescue.Incident;
-import cityrescue.Station;
-
+import cityrescue.enums.IncidentStatus;
+import cityrescue.enums.IncidentType;
+import cityrescue.enums.UnitStatus;
+import cityrescue.enums.UnitType;
+import cityrescue.exceptions.InvalidLocationException;
 /**
- * CityRescueImpl (Starter)
- *
- * Your task is to implement the full specification.
- * You may add additional classes in any package(s) you like.
- */
-public class CityRescueImpl implements CityRescue {
+* The Unit class is an abstract class that is the parent class for the
+* Ambulance, FireEngine and PoliceCar classes.
+*
+* @author Jacob Foot
+* @version 1.0
+* @since 2026
+*/
+public abstract class Unit {
+    private UnitType unitType;
+    private UnitStatus unitStatus = UnitStatus.IDLE;
+    private IncidentType canRespondTo;
+    private int ticksToResolve;
+    private int unitID;
+    private int numberOfUnits;
+    private int homeStationId;
+    private int[] position;  //[x, y]
+    private final String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"};
+    private Incident targetIncident;
 
-    // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
-    private CityMap cityMap;
-    private Unit[] units = new Unit[50];
-    private Station[] stations = new Station[20];
-    private Incident[] incidents = new Incident[200];
-    private final int MAX_STATIONS = 20;
-    private final int MAX_UNITS = 50;
-    private final int MAX_INCIDENTS = 200;
-    int currentTick = 0;
+    public Unit() {unitID = ++numberOfUnits;}
+    public UnitType getUnitType() {return unitType;}
+    public IncidentType getCanRespondTo() {return canRespondTo;}
+    public int getUnitID() {return unitID;}
+    public int getTicksToResolve() {return ticksToResolve;}
+    public int[] getPosition() {return position;}
+    public int getHomeStationId() {return homeStationId;}
+    public UnitStatus getUnitStatus() {return unitStatus;}
+    public Incident getTargetIncident(){return targetIncident;}
+    public int getManhattanDistance(int[] targetPos){
+        if (!(this.unitStatus.equals("IDLE"))) {return -1;}
+        return (Math.abs(targetPos[0] - position[0]) + Math.abs(targetPos[1] - position[1]));
+    }
     
+    public void setUnitStatus(UnitStatus unitStatus) {this.unitStatus = unitStatus;}
+    public void setTargetIncident(Incident targetIncident) {this.targetIncident = targetIncident;}
+    public void setHomeStationId(int id) {this.homeStationId = id;}
 
-    @Override
-    public void initialise(int width, int height) throws InvalidGridException {
-        if ((width <= 0) || (height <=0)) {throw new InvalidGridException("Not valid grid size.");}
-        this.cityMap = new CityMap(new int[] {width, height});
-    }
+    /**
+    * Checks if this unit can handle a specific incident.
+    *
+    * @param incident the incident to check
+    * @return boolean true/false whether this unit can handle that incident
+    */
+    public boolean canHandle(Incident incident) {return (incident.getIncidentType().equals(canRespondTo));}
+    
+    /**
+    * Moves the unit closer to the incident it is responding to
+    *
+    * @param cityMap the cityMap to be updated
+    */
+    public void moveUnit(CityMap cityMap) throws InvalidLocationException{
+        if (!(this.unitStatus.equals(UnitStatus.EN_ROUTE))) {return;}
+        int[] targetPos = this.targetIncident.getPosition();
 
-    @Override
-    public int[] getGridSize() {
-        return cityMap.getGridSize();
-    }
+        boolean[] validDirections;
 
-    @Override
-    public void addObstacle(int x, int y) throws InvalidLocationException{
         try{
-            cityMap.addBlockedTile(new int[] {x, y});
-        } catch (InvalidLocationException e) {
-            throw e;
-        }
-    }
+            validDirections = cityMap.checkAround(this.position);
+        } catch (InvalidLocationException e) {throw e;}
 
-    @Override
-    public void removeObstacle(int x, int y) throws InvalidLocationException {
-        try{
-            cityMap.removeBlockedTile(new int[] {x, y});
-        } catch (InvalidLocationException e) {
-            throw e;
-        }
-    }
+        if (targetPos[0] >= position[0]) {validDirections[3] = false;}
+        if (targetPos[0] <= position[0]) {validDirections[1] = false;}
+        if (targetPos[1] >= position[1]) {validDirections[0] = false;}
+        if (targetPos[1] <= position[1]) {validDirections[2] = false;}
 
-    @Override
-    public int addStation(String name, int x, int y) throws CapacityExceededException, InvalidNameException, InvalidLocationException {
-        int[] location = new int[] {x, y};
-        if (cityMap.isBlocked(location) || cityMap.checkInGrid(location)){
-            throw new InvalidLocationException("Location Invalid");}
-        if (name.equals("")) {throw new InvalidNameException("Name Invalid.");}
-        int added = 0;
-        Station newStation = new Station(3, name, location);
-        for (int i = 0; i < stations.length; i++) {
-            if (stations[i] == null){
-                stations[i] = newStation;
-                added += 1;
+        int checkTrue = 0;
+        for (int i = 0; i < validDirections.length; i++){
+            if (validDirections[i]) {checkTrue += 1;}
+        }  
+        if (checkTrue == 0){return;} // nowhere to move and so function is returned.
+
+        String closest = "";
+        for (int i = 0; i < movementCandidates.length; i++){
+            if (validDirections[i]) {
+                closest = movementCandidates[i];
                 break;
                 }
         }
-        if (added == 0) {throw new CapacityExceededException("Capacity Exceeded");}
-        return newStation.getStationID();
-    }
 
-    @Override
-    public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
-        int removed = 0;
-        for (int i = 0; i < stations.length; i++){
-            if (stations[i].getStationID() == stationId){
-                if (stations[i].isEmpty()){
-                    stations[i] = null;
-                    removed += 1;
-                } else {throw new IllegalStateException("State Illegal");}
-            }
-        }
-        if (removed == 0) {throw new IDNotRecognisedException("ID not recognised");}
-    }
-
-    @Override
-    public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
-        int updated = 0;
-        for (int i = 0; i < stations.length; i++){
-            if (stations[i].getStationID() == stationId){
-                if (maxUnits > stations[i].getMaxCapacity()){
-                    stations[i] = null;
-                    updated += 1;
-                } else {throw new InvalidCapacityException("Invalid Capacity");}
-            }
-        }
-        if (updated == 0) {throw new IDNotRecognisedException("ID not recognised");}
-    }
-
-    @Override
-    public int[] getStationIds() {
-        int[] stationIds = new int[stations.length];
-        for (int i = 0; i < stations.length; i++){
-            if (stations[i] != null){
-                stationIds[i] = stations[i].getStationID();
-            }
-        }
-        return stationIds;
-    }
-
-    @Override
-    public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException, CapacityExceededException {
-        switch (type) {
-            case AMBULANCE:
-                Ambulance newUnit = new Ambulance();
-            case FIRE_ENGINE:
-                FireEngine newUnit = new FireEngine();
-            case POLICE_CAR:
-                PoliceCar newUnit = new PoliceCar();
+        switch (closest) {
+            case "NORTH":
+                this.position[1] -= 1;
+                break;
+            case "EAST":
+                this.position[0] += 1;
+                break;
+            case "SOUTH":
+                this.position[1] += 1;
+                break;
+            case "WEST":
+                this.position[0] -= 1;
+                break;
             default:
-                throw InvalidUnitException;
+                return;
         }
 
-        int exist = 0;
-        for (int i = 0; i < stations.length; i++){
-            if (stations[i].getStationID() == stationId){
-                try {
-                    stations[i].addUnit(newUnit);
-                } catch (CapacityExceededException e) {
-                    throw e;
-                } finally {exist += 1;}
+        if ((targetPos[0] == this.position[0]) && (targetPos[1] == this.position[1])){
+            this.unitStatus = UnitStatus.AT_SCENE;
+            this.targetIncident.setIncidentStatus(IncidentStatus.IN_PROGRESS);
             }
-        }
-        if (exist == 0){throw new IDNotRecognisedException("ID not recognised");}
-
-        int added = 0;
-        for (int i = 0; i < units.length; i++) {
-            if (units[i] == null){
-                units[i] = newUnit;
-                added += 1;
-                break;
-                }
-        }
-        if (added == 0) {throw new CapacityExceededException("Capacity Exceeded");}
-        return newUnit.getUnitID();
     }
-
-    @Override
-    public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
-        int exist = 0;
-        for (int i = 0; i < units.length; i++) {
-            if (units[i].getUnitID() == unitId){
-                if (units[i].getUnitStatus().equals(UnitStatus.IDLE)) {throw new IllegalStateException("State Illegal");}
-                exist += 1;
-                units[i].setUnitStatus(UnitStatus.OUT_OF_SERVICE);
-                break;
-                }
-        }
-        if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
-    }
-
-    @Override
-    public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public int[] getUnitIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public String viewUnit(int unitId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public int reportIncident(IncidentType type, int severity, int x, int y) throws InvalidSeverityException, InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public int[] getIncidentIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public String viewIncident(int incidentId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public void dispatch() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public void tick() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public String getStatus() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
+}
