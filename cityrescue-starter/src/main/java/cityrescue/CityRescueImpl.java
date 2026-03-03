@@ -244,7 +244,7 @@ public class CityRescueImpl implements CityRescue {
                 int[] position = units[i].getPosition();
                 String extra = "";
                 if (units[i].getTargetIncident() != null) {extra = " INCIDENT="+ units[i].getTargetIncident().getIncidentID() +" WORK=2 ";}
-                unitString = "U"+unitId+" TYPE="+ units[i].getUnitType() +" HOME="+ units[i].getHomeStationId() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ units[i].getUnitStatus() + extra;
+                unitString = "\nU"+unitId+" TYPE="+ units[i].getUnitType() +" HOME="+ units[i].getHomeStationId() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ units[i].getUnitStatus() + extra;
                 exist += 1;
             }
         }
@@ -343,7 +343,7 @@ public class CityRescueImpl implements CityRescue {
                         extra = "" + units[j].getUnitID();
                         }
                 }
-                incidentString = "I#"+ incidentId +" TYPE="+ incidents[i].getIncidentType() +" SEV="+ incidents[i].getSeverity() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ incidents[i].getIncidentStatus() + extra;
+                incidentString = "\nI#"+ incidentId +" TYPE="+ incidents[i].getIncidentType() +" SEV="+ incidents[i].getSeverity() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ incidents[i].getIncidentStatus() + extra;
                 exist += 1;
             }
         }
