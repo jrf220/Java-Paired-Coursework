@@ -1,6 +1,10 @@
 package cityrescue;
 import java.util.Arrays;
 
+import cityrescue.enums.IncidentStatus;
+import cityrescue.enums.IncidentType;
+import cityrescue.enums.UnitStatus;
+import cityrescue.enums.UnitType;
 import cityrescue.exceptions.InvalidLocationException;
 /**
 * The Unit class is an abstract class that is the parent class for the
@@ -11,9 +15,9 @@ import cityrescue.exceptions.InvalidLocationException;
 * @since 2026
 */
 public abstract class Unit {
-    private String unitType;
-    private String unitStatus = "IDLE";
-    private String canRespondTo;
+    private UnitType unitType;
+    private UnitStatus unitStatus = UnitStatus.IDLE;
+    private IncidentType canRespondTo;
     private int ticksToResolve;
     private int unitID;
     private int numberOfUnits;
@@ -22,8 +26,8 @@ public abstract class Unit {
     private Incident targetIncident;
 
     public Unit() {unitID = ++numberOfUnits;}
-    public String getUnitType() {return unitType;}
-    public String getCanRespondTo() {return canRespondTo;}
+    public UnitType getUnitType() {return unitType;}
+    public IncidentType getCanRespondTo() {return canRespondTo;}
     public int getUnitID() {return unitID;}
     public int getTicksToResolve() {return ticksToResolve;}
     public int[] getPosition() {return position;}
@@ -32,10 +36,10 @@ public abstract class Unit {
         return (Math.abs(targetPos[0] - position[0]) + Math.abs(targetPos[1] - position[1]));
     }
     
-    public String getUnitStatus() {return unitStatus;}
+    public UnitStatus getUnitStatus() {return unitStatus;}
     public Incident getTargetIncident(){return targetIncident;}
     
-    public void setUnitStatus(String unitStatus) {this.unitStatus = unitStatus;}
+    public void setUnitStatus(UnitStatus unitStatus) {this.unitStatus = unitStatus;}
     public void setTargetIncident(Incident targetIncident) {this.targetIncident = targetIncident;}
     
     /**
@@ -52,7 +56,7 @@ public abstract class Unit {
     * @param cityMap the cityMap to be updated
     */
     public void moveUnit(CityMap cityMap) throws InvalidLocationException{
-        if (!(this.unitStatus.equals("EN_ROUTE"))) {return;}
+        if (!(this.unitStatus.equals(UnitStatus.EN_ROUTE))) {return;}
         int[] targetPos = this.targetIncident.getPosition();
 
         boolean[] validDirections;
@@ -97,7 +101,9 @@ public abstract class Unit {
                 return;
         }
 
-        if (Arrays.equals(this.position, targetPos)) {this.unitStatus = "AT_SCENE";}
+        if (Arrays.equals(this.position, targetPos)){
+            this.unitStatus = UnitStatus.AT_SCENE;
+            this.targetIncident.setIncidentStatus(IncidentStatus.IN_PROGRESS);
+            }
     }
 }
-
