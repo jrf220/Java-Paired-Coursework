@@ -365,7 +365,37 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public String getStatus() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        String output = "TICK=" + currentTick;
+        output+= "\nSTATIONS=" + Station.getNumberOfStations() + " UNITS=" + Unit.getNumberOfUnits() + " INCIDENTS=" + Incident.getNumberOfIncidents() + " OBSTACLES=" + CityMap.getBlockedCount();
+        output+= "\nINCIDENTS";
+        
+        int[] incidentIds = getIncidentIds();
+        int[] untitIDs = getUnitIds();
+
+        for (int i = 0; i < incidentIds.length; i++)
+        {
+            try
+            {
+                output+= viewIncident(incidentIds[i]);
+            }catch(IDNotRecognisedException e)
+            {
+                output+=("\nID not Found");
+            }
+            
+        }
+
+        for (int i = 0; i < untitIDs.length; i++)
+        {
+            try
+            {
+                output+= viewUnit(untitIDs[i]);
+            }catch(IDNotRecognisedException e)
+            {
+                output+=("\nID not Found");
+            }
+            
+        }
+
+        return output;
     }
 }
