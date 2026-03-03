@@ -1,6 +1,4 @@
 package cityrescue;
-import java.util.Arrays;
-
 import cityrescue.enums.IncidentStatus;
 import cityrescue.enums.IncidentType;
 import cityrescue.enums.UnitStatus;
@@ -101,7 +99,7 @@ public abstract class Unit {
                 return;
         }
 
-        if (Arrays.equals(this.position, targetPos)){
+        if ((targetPos[0] == this.position[0]) && (targetPos[1] == this.position[1])){
             this.unitStatus = UnitStatus.AT_SCENE;
             this.targetIncident.setIncidentStatus(IncidentStatus.IN_PROGRESS);
             }
