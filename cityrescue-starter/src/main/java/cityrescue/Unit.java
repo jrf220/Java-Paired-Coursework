@@ -23,6 +23,7 @@ public abstract class Unit {
     private int[] position;  //[x, y]
     private final String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"};
     private Incident targetIncident;
+    private int work = -1;
 
     public Unit(int homeStationId){
         unitID = ++numberOfUnits;
@@ -35,7 +36,8 @@ public abstract class Unit {
     public int[] getPosition() {return position;}
     public int getHomeStationId() {return homeStationId;}
     public UnitStatus getUnitStatus() {return unitStatus;}
-    public Incident getTargetIncident(){return targetIncident;}
+    public Incident getTargetIncident() {return targetIncident;}
+    public int getWork() {return work;}
     public int getManhattanDistance(int[] targetPos){
         if (!(this.unitStatus.equals(UnitStatus.IDLE))) {return -1;}
         return (Math.abs(targetPos[0] - position[0]) + Math.abs(targetPos[1] - position[1]));
@@ -45,6 +47,8 @@ public abstract class Unit {
     public void setTargetIncident(Incident targetIncident) {this.targetIncident = targetIncident;}
     public void setHomeStationId(int id) {this.homeStationId = id;}
     public void setPosition(int[] newPos) {this.position = newPos;}
+    public void setWork(int work) {this.work = work;}
+    public void setWork() {work -= 1;}
 
     /**
     * Checks if this unit can handle a specific incident.
