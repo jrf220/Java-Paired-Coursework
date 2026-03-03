@@ -133,7 +133,11 @@ public class CityRescueImpl implements CityRescue {
                     stations[i].addUnit(newUnit);
                 } catch (CapacityExceededException e) {
                     throw e;
-                } finally {exist += 1;}
+                } finally {
+                    exist += 1;
+                    int[] pos = stations[i].getPosition();
+                    newUnit.setPosition(pos);
+                    }
             }
         }
         if (exist == 0){throw new IDNotRecognisedException("ID not recognised");}
@@ -197,12 +201,11 @@ public class CityRescueImpl implements CityRescue {
         int exist = 0;
         for (int i = 0; i < units.length; i++) {
             if (units[i].getUnitID() == unitId){
-                units[i].setUnitStatus(UnitStatus.OUT_OF_SERVICE);
-                int stationId = units[i].getHomeStationId();
-                for (int j = 0; j < units.length; j++){
-                    if (stations[i].getStationID() == stationId){
-                        stations[i].removeUnit(unitId);
-                    }
+                if (outOfService) {units[i].setUnitStatus(UnitStatus.IDLE);}
+                else {
+                    if (units[i].getUnitStatus().equals(UnitStatus.IDLE)){
+                        units[i].setUnitStatus(UnitStatus.OUT_OF_SERVICE);
+                    } else {throw new IllegalStateException("State Ilegeal");}
                 }
                 exist += 1;
             }
@@ -240,13 +243,41 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public int reportIncident(IncidentType type, int severity, int x, int y) throws InvalidSeverityException, InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int[] coords = {x, y};
+        if (type == null) {throw new InvalidLocationException("type == null");}
+        if ((severity < 1) || (severity > 5)) {throw new InvalidSeverityException("Severity Invalid");}
+        if (cityMap.checkInGrid(coords) || (cityMap.isBlocked(coords))) {throw new InvalidLocationException("Location Invalid");}
+        Incident newIncident = new Incident(type, severity, x, y);
+        int added = 0;
+        for (int i = 0; i < incidents.length; i++) {
+            if (incidents[i] == null){
+                incidents[i] = newIncident;
+                added += 1;
+                break;
+                }
+        }
+        if (added == 0) {throw new CapacityExceededException("Capacity Exceeded");}
+        return newIncident.getIncidentID();
     }
 
     @Override
     public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
+        int exist = 0;
+        for (int i = 0; i < incidents.length; i++) {
+            if (incidents[i].getIncidentID() == incidentId){
+                exist += 1;
+                IncidentStatus status = incidents[i].getIncidentStatus();
+                switch (status){
+                    case REPORTED:
+                        break;
+                    case DISPATCHED:
+                        break;
+                    default:
+                        throw new IllegalStateException("State Illegal");
+                }
+            }
+        }
+        if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
