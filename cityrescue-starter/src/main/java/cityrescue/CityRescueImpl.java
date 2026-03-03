@@ -279,7 +279,16 @@ public class CityRescueImpl implements CityRescue {
                 exist += 1;
                 try{
                     incidents[i].cancelIncident();
-                } catch (IllegalStateException e) {throw e;}
+                } catch (IllegalStateException e) {throw e;
+                } finally {
+                    if (incidents[i].getIncidentStatus().equals(IncidentStatus.DISPATCHED)) {
+                        for (int j = 0; j < incidents.length; j++){
+                        if (units[j].getTargetIncident() == incidents[i]) {
+                            units[j].setUnitStatus(UnitStatus.IDLE);
+                            }
+                        }
+                    }
+                }
             }
         }
         if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
