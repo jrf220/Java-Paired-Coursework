@@ -44,7 +44,7 @@ public class Station {
         return position;
     }
 
-    public int getNumberOfStations()
+    public static int getNumberOfStations()
     {
         return numberOfStations;
     }
