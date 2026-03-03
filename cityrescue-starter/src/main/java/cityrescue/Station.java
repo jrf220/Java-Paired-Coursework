@@ -12,7 +12,7 @@ import cityrescue.exceptions.InvalidCapacityException;
 * @since 2026
 */
 public class Station {
-    private int numberOfStations;
+    static private int numberOfStations;
     private int stationID;
     private int maxCapacity;
     private int currentCapacity = 0;
@@ -42,6 +42,16 @@ public class Station {
     public int[] getPosition()
     {
         return position;
+    }
+
+    public int getNumberOfStations()
+    {
+        return numberOfStations;
+    }
+
+    public int getCurrentStationCapacity()
+    {
+        return currentCapacity;
     }
 
     public boolean isEmpty()
