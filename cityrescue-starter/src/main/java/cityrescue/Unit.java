@@ -24,7 +24,10 @@ public abstract class Unit {
     private final String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"};
     private Incident targetIncident;
 
-    public Unit() {unitID = ++numberOfUnits;}
+    public Unit(int homeStationId){
+        unitID = ++numberOfUnits;
+        this.homeStationId = homeStationId;
+        }
     public UnitType getUnitType() {return unitType;}
     public IncidentType getCanRespondTo() {return canRespondTo;}
     public int getUnitID() {return unitID;}
@@ -41,6 +44,7 @@ public abstract class Unit {
     public void setUnitStatus(UnitStatus unitStatus) {this.unitStatus = unitStatus;}
     public void setTargetIncident(Incident targetIncident) {this.targetIncident = targetIncident;}
     public void setHomeStationId(int id) {this.homeStationId = id;}
+    public void setPosition(int[] newPos) {this.position = newPos;}
 
     /**
     * Checks if this unit can handle a specific incident.
