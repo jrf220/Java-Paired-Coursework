@@ -26,7 +26,7 @@ public class CityMap
         return gridSize;
     }
 
-    public int getBlockedCount()
+    public static int getBlockedCount()
     {
         return blockedCount;
     }
