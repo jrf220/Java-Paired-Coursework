@@ -19,6 +19,7 @@ public abstract class Unit {
     private int ticksToResolve;
     private int unitID;
     private int numberOfUnits;
+    private int homeStationId;
     private int[] position;  //[x, y]
     private final String[] movementCandidates = {"NORTH", "EAST", "SOUTH", "WEST"};
     private Incident targetIncident;
@@ -29,17 +30,18 @@ public abstract class Unit {
     public int getUnitID() {return unitID;}
     public int getTicksToResolve() {return ticksToResolve;}
     public int[] getPosition() {return position;}
+    public int getHomeStationId() {return homeStationId;}
+    public UnitStatus getUnitStatus() {return unitStatus;}
+    public Incident getTargetIncident(){return targetIncident;}
     public int getManhattanDistance(int[] targetPos){
         if (!(this.unitStatus.equals("IDLE"))) {return -1;}
         return (Math.abs(targetPos[0] - position[0]) + Math.abs(targetPos[1] - position[1]));
     }
     
-    public UnitStatus getUnitStatus() {return unitStatus;}
-    public Incident getTargetIncident(){return targetIncident;}
-    
     public void setUnitStatus(UnitStatus unitStatus) {this.unitStatus = unitStatus;}
     public void setTargetIncident(Incident targetIncident) {this.targetIncident = targetIncident;}
-    
+    public void setHomeStationId(int id) {this.homeStationId = id;}
+
     /**
     * Checks if this unit can handle a specific incident.
     *
