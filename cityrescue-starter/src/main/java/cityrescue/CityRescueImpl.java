@@ -49,7 +49,7 @@ public class CityRescueImpl implements CityRescue {
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
         try{
-            cityMap.removedBlockedTile(new int[] {x, y});
+            cityMap.removeBlockedTile(new int[] {x, y});
         } catch (InvalidLocationException e) {
             throw e;
         }
