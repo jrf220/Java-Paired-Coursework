@@ -50,6 +50,7 @@ public abstract class Unit {
     public void setPosition(int[] newPos) {this.position = newPos;}
     public void setWork(int work) {this.work = work;}
     public void setWork() {work -= 1;}
+    public void removeTargetIncident() {this.targetIncident = null;}
 
     /**
     * Checks if this unit can handle a specific incident.
@@ -113,7 +114,7 @@ public abstract class Unit {
         if ((targetPos[0] == this.position[0]) && (targetPos[1] == this.position[1])){
             this.unitStatus = UnitStatus.AT_SCENE;
             this.targetIncident.setIncidentStatus(IncidentStatus.IN_PROGRESS);
+            this.work = this.ticksToResolve;
             }
     }
 }
-
