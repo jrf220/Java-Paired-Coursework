@@ -7,8 +7,8 @@ class PoliceCar extends Unit {
     private final IncidentType canRespondTo = IncidentType.CRIME;
     private final int ticksToResolve = 3;
 
-    PoliceCar(){
+    PoliceCar(int homeStationId){
         // this is a constructor method
-        super();
+        super(homeStationId);
     }
 }
