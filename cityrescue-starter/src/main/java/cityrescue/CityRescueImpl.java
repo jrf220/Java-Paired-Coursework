@@ -123,7 +123,7 @@ public class CityRescueImpl implements CityRescue {
             case POLICE_CAR:
                 PoliceCar newUnit = new PoliceCar(stationId);
             default:
-                throw InvalidUnitException;
+                throw new InvalidUnitException("Unit type Invalid");
         }
 
         int exist = 0;
@@ -157,7 +157,7 @@ public class CityRescueImpl implements CityRescue {
             if (units[i].getUnitID() == unitId){
                 if (units[i].getUnitStatus().equals(UnitStatus.IDLE)) {throw new IllegalStateException("State Illegal");}
                 exist += 1;
-                units[i].setUnitStatus(UnitStatus.OUT_OF_SERVICE);
+                setUnitOutOfService(unitId, true);
                 break;
                 }
         }
@@ -194,20 +194,48 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int exist = 0;
+        for (int i = 0; i < units.length; i++) {
+            if (units[i].getUnitID() == unitId){
+                units[i].setUnitStatus(UnitStatus.OUT_OF_SERVICE);
+                int stationId = units[i].getHomeStationId();
+                for (int j = 0; j < units.length; j++){
+                    if (stations[i].getStationID() == stationId){
+                        stations[i].removeUnit(unitId);
+                    }
+                }
+                exist += 1;
+            }
+        }
+        if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
     @Override
     public int[] getUnitIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int[] unitIds = new int[units.length];
+        for (int i = 0; i < units.length; i++){
+            if (units[i] != null){
+                unitIds[i] = units[i].getUnitID();
+            }
+        }
+        return unitIds;
     }
 
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int exist = 0;
+        String unitString = "";
+        for (int i = 0; i < units.length; i++) {
+            if (units[i].getUnitID() == unitId){
+                int[] position = units[i].getPosition();
+                String extra = "";
+                if (units[i].getTargetIncident() != null) {extra = " INCIDENT="+ units[i].getTargetIncident().getIncidentID() +" WORK=2 ";}
+                unitString = "U"+unitId+" TYPE="+ units[i].getUnitType() +" HOME="+ units[i].getHomeStationId() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ units[i].getUnitStatus();
+                exist += 1;
+            }
+        }
+        if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
+        return unitString;
     }
 
     @Override
