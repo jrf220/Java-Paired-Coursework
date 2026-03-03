@@ -1,11 +1,18 @@
 package cityrescue;
 
-import cityrescue.enums.*;
-import cityrescue.exceptions.*;
-import cityrescue.Unit;
-import cityrescue.CityMap;
-import cityrescue.Incident;
-import cityrescue.Station;
+import cityrescue.enums.IncidentStatus;
+import cityrescue.enums.IncidentType;
+import cityrescue.enums.UnitStatus;
+import cityrescue.enums.UnitType;
+import cityrescue.exceptions.CapacityExceededException;
+import cityrescue.exceptions.IDNotRecognisedException;
+import cityrescue.exceptions.InvalidCapacityException;
+import cityrescue.exceptions.InvalidGridException;
+import cityrescue.exceptions.InvalidLocationException;
+import cityrescue.exceptions.InvalidNameException;
+import cityrescue.exceptions.InvalidSeverityException;
+import cityrescue.exceptions.InvalidUnitException;
+
 
 /**
  * CityRescueImpl (Starter)
@@ -115,13 +122,17 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException, CapacityExceededException {
+        Unit newUnit;
         switch (type) {
             case AMBULANCE:
-                Ambulance newUnit = new Ambulance(stationId);
+                newUnit = new Ambulance(stationId);
+                break;
             case FIRE_ENGINE:
-                FireEngine newUnit = new FireEngine(stationId);
+                newUnit = new FireEngine(stationId);
+                break;
             case POLICE_CAR:
-                PoliceCar newUnit = new PoliceCar(stationId);
+                newUnit = new PoliceCar(stationId);
+                break;
             default:
                 throw new InvalidUnitException("Unit type Invalid");
         }
@@ -233,7 +244,7 @@ public class CityRescueImpl implements CityRescue {
                 int[] position = units[i].getPosition();
                 String extra = "";
                 if (units[i].getTargetIncident() != null) {extra = " INCIDENT="+ units[i].getTargetIncident().getIncidentID() +" WORK=2 ";}
-                unitString = "U"+unitId+" TYPE="+ units[i].getUnitType() +" HOME="+ units[i].getHomeStationId() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ units[i].getUnitStatus();
+                unitString = "U"+unitId+" TYPE="+ units[i].getUnitType() +" HOME="+ units[i].getHomeStationId() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ units[i].getUnitStatus() + extra;
                 exist += 1;
             }
         }
@@ -266,15 +277,9 @@ public class CityRescueImpl implements CityRescue {
         for (int i = 0; i < incidents.length; i++) {
             if (incidents[i].getIncidentID() == incidentId){
                 exist += 1;
-                IncidentStatus status = incidents[i].getIncidentStatus();
-                switch (status){
-                    case REPORTED:
-                        break;
-                    case DISPATCHED:
-                        break;
-                    default:
-                        throw new IllegalStateException("State Illegal");
-                }
+                try{
+                    incidents[i].cancelIncident();
+                } catch (IllegalStateException e) {throw e;}
             }
         }
         if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
@@ -283,20 +288,58 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if ((newSeverity < 1) || (newSeverity > 5)) {throw new InvalidSeverityException("Severity Invalid");}
+        int exist = 0;
+        for (int i = 0; i < incidents.length; i++) {
+            if (incidents[i].getIncidentID() == incidentId){
+                exist += 1;
+                IncidentStatus status = incidents[i].getIncidentStatus();
+                switch (status){
+                    case REPORTED:
+                        break;
+                    case DISPATCHED:
+                        break;
+                    case IN_PROGRESS:
+                        break;
+                    default:
+                        throw new IllegalStateException("State Illegal");
+                }
+                incidents[i].setSeverity(newSeverity);
+            }
+        }
+        if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
     @Override
     public int[] getIncidentIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int[] incidentIds = new int[incidents.length];
+        for (int i = 0; i < incidents.length; i++){
+            if (incidents[i] != null){
+                incidentIds[i] = incidents[i].getIncidentID();
+            }
+        }
+        return incidentIds;
     }
 
     @Override
     public String viewIncident(int incidentId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int exist = 0;
+        String incidentString = "";
+        String extra = "";
+        for (int i = 0; i < incidents.length; i++) {
+            if (incidents[i].getIncidentID() == incidentId){
+                int[] position = incidents[i].getPosition();
+                for (int j = 0; j < incidents.length; j++){
+                    if (units[j].getTargetIncident() == incidents[i]) {
+                        extra = "" + units[j].getUnitID();
+                        }
+                }
+                incidentString = "I#"+ incidentId +" TYPE="+ incidents[i].getIncidentType() +" SEV="+ incidents[i].getSeverity() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ incidents[i].getIncidentStatus() + extra;
+                exist += 1;
+            }
+        }
+        if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
+        return incidentString;
     }
 
     @Override
