@@ -15,14 +15,14 @@ import cityrescue.exceptions.InvalidUnitException;
 
 
 /**
- * CityRescueImpl (Starter)
- *
- * Your task is to implement the full specification.
- * You may add additional classes in any package(s) you like.
- */
+* This is the main implementation for this project, containing all the functions for the tests to run.
+*
+* @author Jacob Foot & Appsharan Chandrarajan
+* @version 1.0
+* @since 2026
+*/
 public class CityRescueImpl implements CityRescue {
 
-    // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
     private CityMap cityMap;
     private Unit[] units = new Unit[50];
     private Station[] stations = new Station[20];
@@ -32,18 +32,34 @@ public class CityRescueImpl implements CityRescue {
     private final int MAX_INCIDENTS = 200;
     private int currentTick = 0;
     
-
+    /**
+    * Start a fresh simulation. 
+    *
+    * @param width the width of the city grid
+    * @param height the height of the city grid
+    */
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
         if ((width <= 0) || (height <=0)) {throw new InvalidGridException("Not valid grid size.");}
         this.cityMap = new CityMap(new int[] {width, height});
     }
 
+    /**
+    * Ask the city how big it is. 
+    *
+    * @return the grid size in the format {x, y}
+    */
     @Override
     public int[] getGridSize() {
         return cityMap.getGridSize();
     }
 
+    /**
+    * Place a roadblock.
+    *
+    * @param x the x coordinate of the obstacle
+    * @param y the y coordiate of the obstacle
+    */
     @Override
     public void addObstacle(int x, int y) throws InvalidLocationException{
         try{
@@ -53,6 +69,12 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
+    /**
+    * Remove a roadblock.
+    *
+    * @param x the x coordinate of the obstacle
+    * @param y the y coordiate of the obstacle
+    */
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
         try{
@@ -62,6 +84,13 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
+    /**
+    * Build a station.
+    *
+    * @param name the name of the station (cannot be empty)
+    * @param x the x coordinate of the station
+    * @param y the y coordiate of the station
+    */
     @Override
     public int addStation(String name, int x, int y) throws CapacityExceededException, InvalidNameException, InvalidLocationException {
         int[] location = new int[] {x, y};
@@ -81,6 +110,11 @@ public class CityRescueImpl implements CityRescue {
         return newStation.getStationID();
     }
 
+    /**
+    * Remove a station (must be empty).
+    *
+    * @param stationId the Id of the station to be removed
+    */
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
         int removed = 0;
@@ -95,6 +129,12 @@ public class CityRescueImpl implements CityRescue {
         if (removed == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
+    /**
+    * Change station parking capacity.
+    *
+    * @param stationId the Id of the station
+    * @param maxUnits the capacity to change to
+    */
     @Override
     public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
         int updated = 0;
@@ -109,6 +149,11 @@ public class CityRescueImpl implements CityRescue {
         if (updated == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
+    /**
+    * List station Ids
+    *
+    * @return a list of the station ids
+    */
     @Override
     public int[] getStationIds() {
         int[] stationIds = new int[stations.length];
@@ -120,6 +165,13 @@ public class CityRescueImpl implements CityRescue {
         return stationIds;
     }
 
+    /**
+    * Add a vehicle to a station. 
+    *
+    * @param stationId the Id of the station for the unit to be added to
+    * @param type the type of unit to be added to the station
+    * @return the Id of the new unit
+    */
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException, CapacityExceededException {
         Unit newUnit;
@@ -165,6 +217,11 @@ public class CityRescueImpl implements CityRescue {
         return newUnit.getUnitID();
     }
 
+    /**
+    * Retire a unit (only when free).  
+    *
+    * @param unitId the Id of the unit to be decomissioned
+    */
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
         int exist = 0;
@@ -179,6 +236,12 @@ public class CityRescueImpl implements CityRescue {
         if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
+    /**
+    * Move a unit to a new home station. 
+    *
+    * @param unitId the Id of the unit to be transferred
+    * @param newStationId the Id of the station for that unit to be transferred to
+    */
     @Override
     public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
         int unitIndex = -1;
@@ -207,6 +270,12 @@ public class CityRescueImpl implements CityRescue {
         stations[stationIndex].addUnit(unitToTransfer);
     }
 
+    /**
+    * Toggle a unit to/from OUT_OF_SERVICE  
+    *
+    * @param unitId the Id of the unit to be decomissioned
+    * @param outOfService whether the unit is already OOS or not
+    */
     @Override
     public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
         int exist = 0;
@@ -224,6 +293,11 @@ public class CityRescueImpl implements CityRescue {
         if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
+    /**
+    * List unit Ids
+    *
+    * @return a list of the unit ids
+    */
     @Override
     public int[] getUnitIds() {
         int[] unitIds = new int[units.length];
@@ -235,6 +309,12 @@ public class CityRescueImpl implements CityRescue {
         return unitIds;
     }
 
+    /**
+    * Describe one unit.
+    *
+    * @param unitId the Id of the unit you want to describe
+    * @return a deterministic string describing that unit
+    */
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
         int exist = 0;
@@ -252,6 +332,15 @@ public class CityRescueImpl implements CityRescue {
         return unitString;
     }
 
+    /**
+    * Log a new incident.
+    *
+    * @param type the type of incident to log
+    * @param severity a value 1-5 representing the severity of the incident
+    * @param x the x coordinate of the incident
+    * @param y the y coordinate of the incident
+    * @return the Id of the incident just logged
+    */
     @Override
     public int reportIncident(IncidentType type, int severity, int x, int y) throws InvalidSeverityException, InvalidLocationException {
         int[] coords = {x, y};
@@ -271,6 +360,11 @@ public class CityRescueImpl implements CityRescue {
         return newIncident.getIncidentID();
     }
 
+    /**
+    * Cancel an incident.
+    *
+    * @param incidentId the Id of the incident to cancel
+    */
     @Override
     public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
         int exist = 0;
@@ -295,6 +389,12 @@ public class CityRescueImpl implements CityRescue {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
+    /**
+    * Change the severity of an incident
+    *
+    * @param incidentId the Id of the incident you want to change
+    * @param newSeverity the new severity for the incident
+    */
     @Override
     public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
         if ((newSeverity < 1) || (newSeverity > 5)) {throw new InvalidSeverityException("Severity Invalid");}
@@ -319,6 +419,11 @@ public class CityRescueImpl implements CityRescue {
         if (exist == 0) {throw new IDNotRecognisedException("ID not recognised");}
     }
 
+    /**
+    * List incident Ids.
+    *
+    * @return a list of the incident ids
+    */
     @Override
     public int[] getIncidentIds() {
         int[] incidentIds = new int[incidents.length];
@@ -330,6 +435,12 @@ public class CityRescueImpl implements CityRescue {
         return incidentIds;
     }
 
+    /**
+    * Describe one incident.
+    *
+    * @param incidentId the Id of the incident you want to describe
+    * @return a deterministic string describing that incident
+    */
     @Override
     public String viewIncident(int incidentId) throws IDNotRecognisedException {
         int exist = 0;
@@ -351,18 +462,63 @@ public class CityRescueImpl implements CityRescue {
         return incidentString;
     }
 
+    /**
+    * Assign units to waiting incidents.
+    */
     @Override
     public void dispatch() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        for (Incident i: incidents){
+            if (i.getIncidentStatus().equals(IncidentStatus.REPORTED)) {
+                int closestUnitId = i.closestUnit(this.units);
+                for (Unit u: units){
+                    if (u.getUnitID() == closestUnitId){
+                        u.setTargetIncident(i);
+                        u.setUnitStatus(UnitStatus.EN_ROUTE);
+                        i.setIncidentStatus(IncidentStatus.DISPATCHED);
+                    }
+                }
+            }
+        }
     }
 
+    /**
+    * Advance the time by one tick.
+    */
     @Override
     public void tick() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        this.currentTick++;
+        for (Unit u : units){
+            if(u.getUnitStatus().equals(UnitStatus.EN_ROUTE)){
+                try{
+                    u.moveUnit(cityMap);
+                } catch(InvalidLocationException e){
+                    System.err.println("moveUnit method has an error");
+                }
+            }
+        }
+
+        for (Unit u: units){
+            if (u.getUnitStatus().equals(UnitStatus.AT_SCENE)){
+                u.setWork(u.getTicksToResolve());
+                if (u.getWork() == 0){
+                    for (Incident i: incidents){
+                        if (i.equals(u.getTargetIncident())){
+                            i.setIncidentStatus(IncidentStatus.RESOLVED);
+                            u.setUnitStatus(UnitStatus.IDLE);
+                            u.removeTargetIncident();
+                        }
+                    }
+                }
+            }
+        }
     }
 
+
+    /**
+    * Produce a full snapshot for the UI/tests.
+    * 
+    * @return a deterministic string of the state of the City Map
+    */
     @Override
     public String getStatus() {
         String output = "TICK=" + currentTick;
@@ -372,30 +528,22 @@ public class CityRescueImpl implements CityRescue {
         int[] incidentIds = getIncidentIds();
         int[] untitIDs = getUnitIds();
 
-        for (int i = 0; i < incidentIds.length; i++)
-        {
-            try
-            {
+        for (int i = 0; i < incidentIds.length; i++){
+            try{
                 output+= viewIncident(incidentIds[i]);
-            }catch(IDNotRecognisedException e)
-            {
+            } catch(IDNotRecognisedException e){
                 output+=("\nID not Found");
-            }
-            
+            } 
         }
 
-        for (int i = 0; i < untitIDs.length; i++)
-        {
-            try
-            {
+        for (int i = 0; i < untitIDs.length; i++){
+            try{
                 output+= viewUnit(untitIDs[i]);
-            }catch(IDNotRecognisedException e)
-            {
+            } catch(IDNotRecognisedException e){
                 output+=("\nID not Found");
             }
-            
         }
-
         return output;
     }
 }
+
