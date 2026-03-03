@@ -1,4 +1,6 @@
 package cityrescue;
+import cityrescue.enums.IncidentStatus;
+import cityrescue.enums.IncidentType;
 /**
 * The Incident class represents the three types of incidents that can exist
 * in this city map, Fire, Medical and Crime, and how to handle these.
@@ -8,24 +10,25 @@ package cityrescue;
 * @since 2026
 */
 public class Incident{
-    private String incidentType;
+    private IncidentType incidentType;
     private int incidentID;
     private static int numberOfIncidents = 0;
     private int severity = 1;
-    private String incidentStatus;
+    private IncidentStatus incidentStatus;
     private int[] position;
 
-    public Incident(String incidentType){
+    public Incident(IncidentType incidentType){
         this.incidentType = incidentType;
+        this.incidentStatus = IncidentStatus.REPORTED;
         incidentID = ++numberOfIncidents;
     }
 
-    public String getIncidentType() {return this.incidentType;}
+    public IncidentType getIncidentType() {return this.incidentType;}
     public int getIncidentID() {return this.incidentID;}
     public static int getNumberOfIncidents() {return numberOfIncidents;}
-    public String getIncidentStatus() {return incidentStatus;}
+    public IncidentStatus getIncidentStatus() {return incidentStatus;}
     public int[] getPosition() {return position;}
-    public void setIncidentStatus(String incidentStatus) {this.incidentStatus = incidentStatus;}
+    public void setIncidentStatus(IncidentStatus incidentStatus) {this.incidentStatus = incidentStatus;}
     public void setPosition(int[] position) {this.position = position;}
     
     /**
@@ -33,8 +36,8 @@ public class Incident{
     *
     */
     public void cancelIncident(){
-        if (incidentStatus.equals("REPORTED") || incidentStatus.equals("DISPATCHED")){
-            this.setIncidentStatus("CANCELLED");
+        if (incidentStatus.equals(IncidentStatus.REPORTED) || incidentStatus.equals(IncidentStatus.DISPATCHED)){
+            this.setIncidentStatus(IncidentStatus.CANCELLED);
         }
     }
 
@@ -57,4 +60,3 @@ public class Incident{
         return lowestUnit;
     }
 }
-
