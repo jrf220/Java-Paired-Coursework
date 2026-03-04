@@ -2,6 +2,14 @@ package cityrescue;
 import cityrescue.enums.IncidentType;
 import cityrescue.enums.UnitType;
 
+/**
+* This is a child of the Unit class used to represent a Fire Engine.
+* It can respond to FIRE incidents and takes 4 ticks to resolve.
+*
+* @author Jacob Foot
+* @version 1.0
+* @since 2026
+*/
 class FireEngine extends Unit {
     private final UnitType unitType = UnitType.FIRE_ENGINE;
     private final IncidentType canRespondTo = IncidentType.FIRE;
@@ -24,3 +32,5 @@ class FireEngine extends Unit {
     @Override
     public int getTicksToResolve(){return ticksToResolve;};
 }
+
+
