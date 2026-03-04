@@ -2,6 +2,14 @@ package cityrescue;
 import cityrescue.enums.IncidentType;
 import cityrescue.enums.UnitType;
 
+/**
+* This is a child of the Unit class used to represent a Police Car.
+* It can respond to CRIME incidents and takes 3 ticks to resolve.
+*
+* @author Jacob Foot
+* @version 1.0
+* @since 2026
+*/
 class PoliceCar extends Unit {
     private final UnitType unitType = UnitType.POLICE_CAR;
     private final IncidentType canRespondTo = IncidentType.CRIME;
@@ -24,3 +32,5 @@ class PoliceCar extends Unit {
     @Override
     public int getTicksToResolve(){return ticksToResolve;};
 }
+
+
