@@ -2,6 +2,14 @@ package cityrescue;
 import cityrescue.enums.IncidentType;
 import cityrescue.enums.UnitType;
 
+/**
+* This is a child of the Unit class used to represent an Ambulance.
+* It can respond to MEDICAL incidents and takes 2 ticks to resolve.
+*
+* @author Jacob Foot
+* @version 1.0
+* @since 2026
+*/
 class Ambulance extends Unit {
     private final UnitType unitType = UnitType.AMBULANCE;
     private final IncidentType canRespondTo = IncidentType.MEDICAL;
@@ -24,3 +32,5 @@ class Ambulance extends Unit {
     @Override
     public int getTicksToResolve(){return ticksToResolve;};
 }
+
+
