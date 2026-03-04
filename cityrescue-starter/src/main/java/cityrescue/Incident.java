@@ -2,9 +2,10 @@ package cityrescue;
 import cityrescue.enums.IncidentStatus;
 import cityrescue.enums.IncidentType;
 import cityrescue.enums.UnitStatus;
+
 /**
 * The Incident class represents the three types of incidents that can exist
-* in this city map, Fire, Medical and Crime, and how to handle these.
+* in this city map, FIRE, MEDICAL and CRIME, and how to handle these.
 *
 * @author Jacob Foot
 * @version 1.0
@@ -38,8 +39,9 @@ public class Incident{
     public void setPosition(int[] position) {this.position = position;}
     
     /**
-    * Cancels a reported or dispatched unit
+    * Cancels a reported or dispatched incident.
     *
+    * @throws IllegalStateException if the incident is not in the correct state to be cancelled.
     */
     public void cancelIncident() throws IllegalStateException{
         if (incidentStatus.equals(IncidentStatus.REPORTED) || incidentStatus.equals(IncidentStatus.DISPATCHED)){
@@ -48,7 +50,10 @@ public class Incident{
     }
 
     /**
-    * Checks which unit is closest to this incident
+    * Checks which unit is closest to this incident. In order to make the function determinsistic,
+    * the rules are as follows: Among all eligible units (correct type, not OUT_OF_SERVICE, 
+    * and not already assigned), they are assigned by Shortest manhattan distance, then lowest 
+    * unitId if tied, then lowestHomeStationId if tied again.
     *
     * @param units a list of all valid units
     * @return the id of the closest instance of the Unit class
