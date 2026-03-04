@@ -1,5 +1,6 @@
 package cityrescue;
 import cityrescue.exceptions.InvalidLocationException;
+
 /**
 * The CityMap class is a class used to keep track of tiles on the city that are blocked and also
 * managing the placement and removal of the blocks.
@@ -8,28 +9,19 @@ import cityrescue.exceptions.InvalidLocationException;
 * @version 1.0
 * @since 2026
 */
-public class CityMap
-{   
+public class CityMap{   
     //The grid uses a 0-based coordinate system. A location (x, y) is in bounds iff 0 ≤ x < width and 0 ≤ y < height.
     private int[] gridSize;
     private boolean[][] blocked;
     static private int blockedCount = 0;
 
-    public CityMap(int[] gridSizeIn)
-    {
+    public CityMap(int[] gridSizeIn){
         gridSize = gridSizeIn;
         blocked = new boolean[gridSizeIn[1]][gridSizeIn[0]];
     }
 
-    public int[] getGridSize()
-    {
-        return gridSize;
-    }
-
-    public static int getBlockedCount()
-    {
-        return blockedCount;
-    }
+    public int[] getGridSize() {return gridSize;}
+    public static int getBlockedCount() {return blockedCount;}
     
     /**
     * This method checks whether the coordinates entered are within the grid and returns true if
@@ -39,14 +31,10 @@ public class CityMap
     * 
     * @return Returns a boolean value that corresponds to whether the item is in the grid or not.
     */
-    public boolean checkInGrid(int[] coords)
-    {
-        if (coords[0] >= gridSize[0] || coords[0] < 0)
-        {
+    public boolean checkInGrid(int[] coords){
+        if (coords[0] >= gridSize[0] || coords[0] < 0){
             return false;
-        }
-        else if (coords[1] >= gridSize[1] || coords[1] < 0)
-        {
+        } else if (coords[1] >= gridSize[1] || coords[1] < 0){
             return false;
         }
         return true;
@@ -57,22 +45,16 @@ public class CityMap
     * and the blockage is not placed on another.
     * 
     * @param coords This takes in a set of coordinates to check as an array {x, y}.
+    * @throws InvalidLocationException if the coordinates are not in the grid.
     */
-    public void addBlockedTile(int[] coords) throws InvalidLocationException
-    {
-        if (checkInGrid(coords) == false)
-        {
+    public void addBlockedTile(int[] coords) throws InvalidLocationException{
+        if (checkInGrid(coords) == false){
             throw new InvalidLocationException("Coordinates not within the grid");
-        }
-        else
-        {
-            if (blocked[coords[1]][coords[0]] == false)
-            {
+        } else {
+            if (blocked[coords[1]][coords[0]] == false){
                 blocked[coords[1]][coords[0]] = true;
                 blockedCount++;
-            }
-           else
-            {
+            } else {
                 throw new InvalidLocationException("Roadcblock already placed at " + coords[0] +", " + coords[1]);
             }
         }
@@ -83,22 +65,16 @@ public class CityMap
     * and when removing, you are not removing from something that is not there.
     * 
     * @param coords This takes in a set of coordinates to check as an array {x, y}.
+    * @throws InvalidLocationException if the coordinates are in the grid or a blocked tile is already there.
     */
-    public void removeBlockedTile(int[] coords) throws InvalidLocationException
-    {
-        if (checkInGrid(coords) == false)
-        {
+    public void removeBlockedTile(int[] coords) throws InvalidLocationException{
+        if (checkInGrid(coords) == false){
             throw new InvalidLocationException("Coordinates not within the grid");
-        }
-        else
-        {
-            if (blocked[coords[1]][coords[0]] == true)
-            {
+        } else {
+            if (blocked[coords[1]][coords[0]] == true){
                 blocked[coords[1]][coords[0]] = false;
                 blockedCount--;
-            }
-            else
-            {
+            } else {
                 throw new InvalidLocationException("Roadcblock is not already placed at " + coords[0] +", " + coords[1]);
             }
         }
@@ -110,17 +86,13 @@ public class CityMap
     * 
     * @param coords This takes in a set of coordinates to check as an array {x, y}.
     * 
-    * @return Returns a boolean value that corresponds to whether the coordinates given to 
-    * the method are blocked or not on the blocked 2D array.
+    * @return Returns a boolean value that corresponds to whether the coordinates given to the method are blocked or not on the blocked 2D array.
+    * @throws InvalidLocationException if the coordinates are not in the grid.
     */
-    public boolean isBlocked(int[] coords) throws InvalidLocationException
-    {
-        if (checkInGrid(coords) == false)
-        {
+    public boolean isBlocked(int[] coords) throws InvalidLocationException{
+        if (checkInGrid(coords) == false){
             throw new InvalidLocationException("Coordinates not within the grid.");
-        }
-        else
-        {
+        } else {
             return blocked[coords[1]][coords[0]];
         }
     }
@@ -130,59 +102,42 @@ public class CityMap
     * location to see if they can move N, E, S, W without moving of the grid or into a blockage.
     * 
     * @param coords This takes in a set of coordinates to check as an array {x, y}.
-    * 
+    * @throws InvalidLocationException if the coordinates are not in the grid.
     * @return Returns a boolean array that specifies the directions in which a unit at a given
     * location can move where each boolean value in the array corresponds to a direction in the
     * following order: {N, E, S, W}.
     */
-    public boolean[] checkAround(int[] coords) throws InvalidLocationException
-    {
-        if (checkInGrid(coords) == false)
-        {
+    public boolean[] checkAround(int[] coords) throws InvalidLocationException{
+        if (checkInGrid(coords) == false){
             throw new InvalidLocationException("Coordinates not within the grid");
-        }
-
-        else
-        {
+        } else {
             boolean[] unblockedDirectionList = new boolean[4]; // In the order: N, E, S, W
 
             int tempx = coords[0] + 1;
-            if (tempx < gridSize[0])
-            {
+            if (tempx < gridSize[0]){
                 unblockedDirectionList[1] = isBlocked(new int[]{tempx, coords[1]});
-            }
-            else
-            {
+            } else {
                 unblockedDirectionList[1] = true;
             }
         
             tempx = coords[0] - 1;
-            if (tempx >= 0)
-            {
+            if (tempx >= 0){
                 unblockedDirectionList[3] = isBlocked(new int[]{tempx, coords[1]});
-            }
-            else
-            {
+            } else {
                 unblockedDirectionList[3] = true;
             }
 
             int tempy = coords[1] + 1;
-            if (tempy < gridSize[1])
-            {
+            if (tempy < gridSize[1]){
                 unblockedDirectionList[0] = isBlocked(new int[]{coords[0], tempy});
-            }
-            else
-            {
+            } else {
                 unblockedDirectionList[0] = true;
             }
 
             tempy = coords[0] - 1;
-            if (tempy >= 0)
-            {
+            if (tempy >= 0) {
                 unblockedDirectionList[2] = isBlocked(new int[]{coords[0], tempy});
-            }
-            else
-            {
+            } else {
                 unblockedDirectionList[2] = true;
             }
 
