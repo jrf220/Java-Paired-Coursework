@@ -4,6 +4,7 @@ import cityrescue.enums.IncidentType;
 import cityrescue.enums.UnitStatus;
 import cityrescue.enums.UnitType;
 import cityrescue.exceptions.InvalidLocationException;
+
 /**
 * The Unit class is an abstract class that is the parent class for the
 * Ambulance, FireEngine and PoliceCar classes.
@@ -39,6 +40,15 @@ public abstract class Unit {
     public UnitStatus getUnitStatus() {return unitStatus;}
     public Incident getTargetIncident() {return targetIncident;}
     public int getWork() {return work;}
+
+    /**
+    * Gets the manhattan distance between this unit and another point on the city map.
+    * Used to find which unit is the closest to a given incident in incident.closestUnit().
+    * Manhattan distance is the absolute value of the x distance + the absolute value of the y distance.
+    *
+    * @param targetPos the position to find the distance betwen.
+    * @return the manhattan distance between the unit and the target
+    */
     public int getManhattanDistance(int[] targetPos){
         if (!(this.unitStatus.equals(UnitStatus.IDLE))) {return -1;}
         return (Math.abs(targetPos[0] - position[0]) + Math.abs(targetPos[1] - position[1]));
@@ -55,31 +65,42 @@ public abstract class Unit {
     public abstract boolean canHandle(Incident incident);
     
     /**
-    * Moves the unit closer to the incident it is responding to
+    * Moves the unit closer to the incident it is responding to.
     *
     * @param cityMap the cityMap to be updated
+    * @throws InvalidLocationException if a movement would be invalid
     */
     public void moveUnit(CityMap cityMap) throws InvalidLocationException{
+        // if the unit is not EN_ROUTE, it cannot move.
         if (!(this.unitStatus.equals(UnitStatus.EN_ROUTE))) {return;}
+
+        // the position of the incident this unit is moving towards
         int[] targetPos = this.targetIncident.getPosition();
 
+        /* validDirections will be a boolean array that contains whether each cardinal direction
+        * is valid and/or would get you closer to your destination */
         boolean[] validDirections;
 
+        // cityMap.checkAround() checks to see which spaces around a position are blocked.
         try{
             validDirections = cityMap.checkAround(this.position);
         } catch (InvalidLocationException e) {throw e;}
 
+        // sets the directions that would get the unit further away to be false
         if (targetPos[0] >= position[0]) {validDirections[3] = false;}
         if (targetPos[0] <= position[0]) {validDirections[1] = false;}
         if (targetPos[1] >= position[1]) {validDirections[0] = false;}
         if (targetPos[1] <= position[1]) {validDirections[2] = false;}
 
+        /* if there is nowhere for the unit to move, the function is returned
+        * e.g. if all spaces around a unit are blocked */
         int checkTrue = 0;
         for (int i = 0; i < validDirections.length; i++){
             if (validDirections[i]) {checkTrue += 1;}
         }  
-        if (checkTrue == 0){return;} // nowhere to move and so function is returned.
+        if (checkTrue == 0){return;}
 
+        // Of the cardinal directions, which is the first match a true value in validDirections
         String closest = "";
         for (int i = 0; i < movementCandidates.length; i++){
             if (validDirections[i]) {
@@ -88,6 +109,7 @@ public abstract class Unit {
                 }
         }
 
+        // switch case to move the unit position depending on the direction
         switch (closest) {
             case "NORTH":
                 this.position[1] -= 1;
@@ -105,6 +127,7 @@ public abstract class Unit {
                 return;
         }
 
+        // if the unit arrives at scene, the status is updated and the tick to resolve is set.
         if ((targetPos[0] == this.position[0]) && (targetPos[1] == this.position[1])){
             this.unitStatus = UnitStatus.AT_SCENE;
             this.targetIncident.setIncidentStatus(IncidentStatus.IN_PROGRESS);
