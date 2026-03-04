@@ -37,6 +37,7 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param width the width of the city grid
     * @param height the height of the city grid
+    * @throws InvalidGridException if either of the given width or height are not positive integers.
     */
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
@@ -59,6 +60,7 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param x the x coordinate of the obstacle
     * @param y the y coordiate of the obstacle
+    * @throws InvalidLocationException if the coordinates are not in the grid.
     */
     @Override
     public void addObstacle(int x, int y) throws InvalidLocationException{
@@ -74,6 +76,7 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param x the x coordinate of the obstacle
     * @param y the y coordiate of the obstacle
+    * @throws InvalidLocationException if the coordinates are not in the grid.
     */
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
@@ -90,6 +93,9 @@ public class CityRescueImpl implements CityRescue {
     * @param name the name of the station (cannot be empty)
     * @param x the x coordinate of the station
     * @param y the y coordiate of the station
+    * @throws CapacityExceededException if there are already too many stations.
+    * @throws InvalidNameException if the given name is blank.
+    * @throws InvalidLocationException if the coordinates are not in the grid.
     */
     @Override
     public int addStation(String name, int x, int y) throws CapacityExceededException, InvalidNameException, InvalidLocationException {
@@ -114,6 +120,8 @@ public class CityRescueImpl implements CityRescue {
     * Remove a station (must be empty).
     *
     * @param stationId the Id of the station to be removed
+    * @throws IDNotRecognisedException if the ID doesn't exist
+    * @throws IllegalStateException if the station is not empty.
     */
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
@@ -134,16 +142,16 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param stationId the Id of the station
     * @param maxUnits the capacity to change to
+    * @throws IDNotRecognisedException if the ID doesn't exist
+    * @throws InvalidCapacityException if the capacity is not valid
     */
     @Override
     public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
         int updated = 0;
         for (int i = 0; i < stations.length; i++){
             if (stations[i].getStationID() == stationId){
-                if (maxUnits > stations[i].getMaxCapacity()){
-                    stations[i] = null;
-                    updated += 1;
-                } else {throw new InvalidCapacityException("Invalid Capacity");}
+                try {stations[i].setStationCapacity(maxUnits);
+                } catch (InvalidCapacityException e) {throw e;}
             }
         }
         if (updated == 0) {throw new IDNotRecognisedException("ID not recognised");}
@@ -170,6 +178,9 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param stationId the Id of the station for the unit to be added to
     * @param type the type of unit to be added to the station
+    * @throws IDNotRecognisedException if the ID doesn't exist 
+    * @throws InvalidUnitException if the unit type is invalid
+    * @throws CapacityExceededException if the given station is full
     * @return the Id of the new unit
     */
     @Override
@@ -221,6 +232,8 @@ public class CityRescueImpl implements CityRescue {
     * Retire a unit (only when free).  
     *
     * @param unitId the Id of the unit to be decomissioned
+    * @throws IDNotRecognisedException if the ID doesn't exist 
+    * @throws  IllegalStateException if the unit is not IDLE
     */
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
@@ -241,6 +254,8 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param unitId the Id of the unit to be transferred
     * @param newStationId the Id of the station for that unit to be transferred to
+    * @throws IDNotRecognisedException if the ID doesn't exist 
+    * @throws  IllegalStateException if the unit is not IDLE
     */
     @Override
     public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
@@ -275,6 +290,8 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param unitId the Id of the unit to be decomissioned
     * @param outOfService whether the unit is already OOS or not
+    * @throws IDNotRecognisedException if the ID doesn't exist 
+    * @throws  IllegalStateException if the unit being set OUT_OF_SERVICE is not IDLE
     */
     @Override
     public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
@@ -313,6 +330,7 @@ public class CityRescueImpl implements CityRescue {
     * Describe one unit.
     *
     * @param unitId the Id of the unit you want to describe
+    * @throws IDNotRecognisedException if the ID doesn't exist 
     * @return a deterministic string describing that unit
     */
     @Override
@@ -323,7 +341,7 @@ public class CityRescueImpl implements CityRescue {
             if (units[i].getUnitID() == unitId){
                 int[] position = units[i].getPosition();
                 String extra = "";
-                if (units[i].getTargetIncident() != null) {extra = " INCIDENT="+ units[i].getTargetIncident().getIncidentID() +" WORK=2 ";}
+                if (units[i].getTargetIncident() != null) {extra = " INCIDENT="+ units[i].getTargetIncident().getIncidentID() +" WORK="+ units[i].getWork();}
                 unitString = "\nU"+unitId+" TYPE="+ units[i].getUnitType() +" HOME="+ units[i].getHomeStationId() +" LOC=("+ position[0] +","+ position[1] +") STATUS="+ units[i].getUnitStatus() + extra;
                 exist += 1;
             }
@@ -339,6 +357,8 @@ public class CityRescueImpl implements CityRescue {
     * @param severity a value 1-5 representing the severity of the incident
     * @param x the x coordinate of the incident
     * @param y the y coordinate of the incident
+    * @throws InvalidSeverityException if the severity given is not between 1 and 5 inclusive
+    * @throws InvalidLocationException if the coordinates are not in grid or are blocked
     * @return the Id of the incident just logged
     */
     @Override
@@ -364,6 +384,8 @@ public class CityRescueImpl implements CityRescue {
     * Cancel an incident.
     *
     * @param incidentId the Id of the incident to cancel
+    * @throws IDNotRecognisedException if the ID doesn't exist 
+    * @throws IllegalStateException if the incident is not in the state to be cancelled
     */
     @Override
     public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
@@ -394,6 +416,10 @@ public class CityRescueImpl implements CityRescue {
     *
     * @param incidentId the Id of the incident you want to change
     * @param newSeverity the new severity for the incident
+    * @throws IDNotRecognisedException if the ID doesn't exist 
+    * @throws InvalidSeverityException if the severity given is not between 1 and 5 inclusive
+    * @throws IllegalStateException if the incident is not in a legal state to be escalated
+    * 
     */
     @Override
     public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
@@ -439,6 +465,7 @@ public class CityRescueImpl implements CityRescue {
     * Describe one incident.
     *
     * @param incidentId the Id of the incident you want to describe
+    * @throws IDNotRecognisedException if the ID doesn't exist 
     * @return a deterministic string describing that incident
     */
     @Override
@@ -546,4 +573,3 @@ public class CityRescueImpl implements CityRescue {
         return output;
     }
 }
-
